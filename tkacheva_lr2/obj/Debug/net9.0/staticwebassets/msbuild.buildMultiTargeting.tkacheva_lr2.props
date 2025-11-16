@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\tkacheva_lr2.props" />
+</Project>
