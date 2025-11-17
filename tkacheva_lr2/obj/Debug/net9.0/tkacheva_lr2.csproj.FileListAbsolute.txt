@@ -146,4 +146,5 @@ C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkach
 C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\bin\Debug\net9.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\bin\Debug\net9.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\bin\Debug\net9.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\obj\Debug\net9.0\tkacheva_lr2.sourcelink.json
 C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
