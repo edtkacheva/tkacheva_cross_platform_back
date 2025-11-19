@@ -12,45 +12,47 @@ namespace tkacheva_lr2.Data
 
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Article> Articles { get; set; }
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<RSSChannel> RSSChannels { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Связь Article -> Category (1 ко многим)
+            // Article → RSSChannel (1 ко многим)
             modelBuilder.Entity<Article>()
-                .HasOne(a => a.Category)
+                .HasOne(a => a.RSSChannel)
                 .WithMany(c => c.Articles)
-                .HasForeignKey(a => a.CategoryId);
+                .HasForeignKey(a => a.RSSChannelId);
 
-            // начальные данные
+            // Users
             modelBuilder.Entity<AppUser>().HasData(
                 new AppUser { Id = 1, UserName = "admin", Password = "admin" },
                 new AppUser { Id = 2, UserName = "user", Password = "1234" }
             );
 
-            modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Name = "Физика", Description = "Статьи по физике" },
-                new Category { Id = 2, Name = "Химия", Description = "Статьи по химии" }
+            // RSS Channels
+            modelBuilder.Entity<RSSChannel>().HasData(
+                new RSSChannel { Id = 1, Name = "Physics", Description = "Physics articles" },
+                new RSSChannel { Id = 2, Name = "Chemistry", Description = "Articles on chemistry" }
             );
 
+            // Articles
             modelBuilder.Entity<Article>().HasData(
                 new Article
                 {
                     Id = 1,
-                    Title = "Квантовая механика",
+                    Title = "Quantum mechanics",
                     Url = "https://example.com/qm",
-                    PublishedAt = DateTime.Now.AddDays(-10),
-                    CategoryId = 1
+                    PublishedAt = new DateTime(2024, 1, 1),
+                    RSSChannelId = 1
                 },
                 new Article
                 {
                     Id = 2,
-                    Title = "Органическая химия",
+                    Title = "Organic chemistry",
                     Url = "https://example.com/organic",
-                    PublishedAt = DateTime.Now.AddDays(-5),
-                    CategoryId = 2
+                    PublishedAt = new DateTime(2025, 1, 1),
+                    RSSChannelId = 2
                 }
             );
         }

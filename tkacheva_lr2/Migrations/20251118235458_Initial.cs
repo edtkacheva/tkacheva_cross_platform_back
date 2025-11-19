@@ -8,23 +8,38 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace tkacheva_lr2.Migrations
 {
     /// <inheritdoc />
-    public partial class AddArticlesAndCategories : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "AppUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserName = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RSSChannels",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Url = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id);
+                    table.PrimaryKey("PK_RSSChannels", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,15 +51,15 @@ namespace tkacheva_lr2.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Url = table.Column<string>(type: "TEXT", nullable: false),
                     PublishedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CategoryId = table.Column<int>(type: "INTEGER", nullable: false)
+                    RSSChannelId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Articles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Articles_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
+                        name: "FK_Articles_RSSChannels_RSSChannelId",
+                        column: x => x.RSSChannelId,
+                        principalTable: "RSSChannels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -59,47 +74,40 @@ namespace tkacheva_lr2.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "Id", "Description", "Name" },
+                table: "RSSChannels",
+                columns: new[] { "Id", "Description", "Name", "Url" },
                 values: new object[,]
                 {
-                    { 1, null, "Физика" },
-                    { 2, null, "Химия" }
+                    { 1, "Physics articles", "Physics", "" },
+                    { 2, "Articles on chemistry", "Chemistry", "" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Articles",
-                columns: new[] { "Id", "CategoryId", "PublishedAt", "Title", "Url" },
+                columns: new[] { "Id", "PublishedAt", "RSSChannelId", "Title", "Url" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Лазеры в физике", "http://example.com/laser" },
-                    { 2, 2, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Органическая химия", "http://example.com/organic" }
+                    { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "Quantum mechanics", "https://example.com/qm" },
+                    { 2, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Organic chemistry", "https://example.com/organic" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Articles_CategoryId",
+                name: "IX_Articles_RSSChannelId",
                 table: "Articles",
-                column: "CategoryId");
+                column: "RSSChannelId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AppUsers");
+
+            migrationBuilder.DropTable(
                 name: "Articles");
 
             migrationBuilder.DropTable(
-                name: "Categories");
-
-            migrationBuilder.DeleteData(
-                table: "AppUsers",
-                keyColumn: "Id",
-                keyValue: 1);
-
-            migrationBuilder.DeleteData(
-                table: "AppUsers",
-                keyColumn: "Id",
-                keyValue: 2);
+                name: "RSSChannels");
         }
     }
 }

@@ -1,0 +1,309 @@
+{
+    "info": {
+      "name": "tkacheva_api_collection",
+      "_postman_id": "c32ad5e8-1caf-4d84-bcd6-33eac02c4acd",
+      "description": "Полная коллекция CRUD и тестов API (users / auth / rss / articles)",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+      {
+        "name": "AUTH",
+        "item": [
+          {
+            "name": "REGISTER superadmin (ADMIN)",
+            "request": {
+              "method": "POST",
+              "header": [],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"userName\":\"superadmin\",\"password\":\"qwerty123\"}"
+              },
+              "url": "{{baseUrl}}/api/users"
+            }
+          },
+          {
+            "name": "LOGIN superadmin (ADMIN)",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var json = pm.response.json();",
+                    "pm.environment.set(\"admin_token\", json.token);"
+                  ]
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\"userName\":\"superadmin\",\"password\":\"qwerty123\"}"
+              },
+              "url": "{{baseUrl}}/api/auth/login"
+            }
+          },
+          {
+            "name": "REGISTER katuha (USER)",
+            "request": {
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\"userName\":\"katuha\",\"password\":\"pass123\"}"
+              },
+              "url": "{{baseUrl}}/api/users"
+            }
+          },
+          {
+            "name": "LOGIN katuha (USER)",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "var json = pm.response.json();",
+                    "pm.environment.set(\"user_token\", json.token);"
+                  ]
+                }
+              }
+            ],
+            "request": {
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\"userName\":\"katuha\",\"password\":\"pass123\"}"
+              },
+              "url": "{{baseUrl}}/api/auth/login"
+            }
+          }
+        ]
+      },
+  
+      {
+        "name": "USERS CRUD",
+        "item": [
+          {
+            "name": "GET ALL USERS (auth required)",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{user_token}}" }
+              ],
+              "url": "{{baseUrl}}/api/users"
+            }
+          },
+          {
+            "name": "GET USER by name",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+              ],
+              "url": "{{baseUrl}}/api/users/katuha"
+            }
+          },
+          {
+            "name": "UPDATE USER (admin only)",
+            "request": {
+              "method": "PUT",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"userName\":\"katuha_new\",\"password\":\"pass999\"}"
+              },
+              "url": "{{baseUrl}}/api/users/katuha"
+            }
+          },
+          {
+            "name": "UPDATE USER should FAIL (user token)",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "pm.expect(pm.response.code).to.be.oneOf([401,403]);"
+                  ]
+                }
+              }
+            ],
+            "request": {
+              "method": "PUT",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{user_token}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"userName\":\"xxx\"}"
+              },
+              "url": "{{baseUrl}}/api/users/katuha"
+            }
+          }
+        ]
+      },
+  
+      {
+        "name": "RSS CHANNELS",
+        "item": [
+          {
+            "name": "CREATE RSS (Admin)",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"name\":\"TechNews\",\"url\":\"https://tech.example.com\",\"description\":\"Latest tech news\"}"
+              },
+              "url": "{{baseUrl}}/api/rss"
+            }
+          },
+          {
+            "name": "CREATE RSS Math (Admin)",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"name\":\"Math\",\"url\":\"https://math.example.com\",\"description\":\"Math articles\"}"
+              },
+              "url": "{{baseUrl}}/api/rss"
+            }
+          },
+          {
+            "name": "GET ALL RSS (auth required)",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{user_token}}" }
+              ],
+              "url": "{{baseUrl}}/api/rss"
+            }
+          },
+          {
+            "name": "GET RSS BY NAME",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{user_token}}" }
+              ],
+              "url": "{{baseUrl}}/api/rss/TechNews"
+            }
+          },
+          {
+            "name": "UPDATE RSS (Admin)",
+            "request": {
+              "method": "PUT",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"name\":\"TechNewsUpdated\",\"url\":\"https://tech.updated\",\"description\":\"Updated info\"}"
+              },
+              "url": "{{baseUrl}}/api/rss/TechNews"
+            }
+          },
+          {
+            "name": "DELETE RSS (Admin)",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+              ],
+              "url": "{{baseUrl}}/api/rss/Math"
+            }
+          }
+        ]
+      },
+  
+      {
+        "name": "ARTICLES",
+        "item": [
+          {
+            "name": "CREATE Article (Admin)",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"title\":\"AI Revolution\",\"url\":\"https://ai.example.com\",\"rssChannelName\":\"TechNews\"}"
+              },
+              "url": "{{baseUrl}}/api/articles"
+            }
+          },
+          {
+            "name": "CREATE Article 2",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"title\":\"Math Wonders\",\"url\":\"https://math.example.com\",\"rssChannelName\":\"Math\"}"
+              },
+              "url": "{{baseUrl}}/api/articles"
+            }
+          },
+          {
+            "name": "GET ALL Articles",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{user_token}}" }
+              ],
+              "url": "{{baseUrl}}/api/articles"
+            }
+          },
+          {
+            "name": "SEARCH Article by Title",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{user_token}}" }
+              ],
+              "url": "{{baseUrl}}/api/articles/title/AI Revolution"
+            }
+          },
+          {
+            "name": "UPDATE Article",
+            "request": {
+              "method": "PUT",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\"title\":\"AI Revolution Updated\",\"url\":\"https://ai.new.com\",\"channelName\":\"TechNews\"}"
+              },
+              "url": "{{baseUrl}}/api/articles/AI Revolution"
+            }
+          },
+          {
+            "name": "DELETE Article (Admin)",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+              ],
+              "url": "{{baseUrl}}/api/articles/Math Wonders"
+            }
+          }
+        ]
+      }
+    ],
+    "variable": [
+      {
+        "key": "baseUrl",
+        "value": "https://localhost:7110"
+      }
+    ]
+  }
+  

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using tkacheva_lr2.Data;
 using tkacheva_lr2.Models;
@@ -6,88 +7,125 @@ using tkacheva_lr2.Models;
 namespace tkacheva_lr2.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/articles")]
     public class ArticlesController : ControllerBase
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ApplicationDbContext _context;
+        public ArticlesController(ApplicationDbContext context) => _context = context;
 
-        public ArticlesController(ApplicationDbContext db)
-        {
-            _db = db;
-        }
-
-        // GET api/articles
+        // GET api/articles - все статьи (только авторизованные)
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Article>>> GetAll()
         {
-            var articles = await _db.Articles
-                .Include(a => a.Category)
+            var list = await _context.Articles
+                .Include(a => a.RSSChannel)
+                .AsNoTracking()
                 .ToListAsync();
-
-            return Ok(articles);
+            return Ok(list);
         }
 
-        // GET api/articles/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        // GET api/articles/{title}
+        [HttpGet("{title}")]
+        [Authorize]
+        public async Task<IActionResult> GetByTitle(string title)
         {
-            var article = await _db.Articles
-                .Include(a => a.Category)
-                .FirstOrDefaultAsync(a => a.Id == id);
+            var article = await _context.Articles
+                .Where(a => EF.Functions.Like(a.Title, title))
+                .FirstOrDefaultAsync();
 
             if (article == null)
-                return NotFound();
+                return NotFound($"Article with title '{title}' not found");
 
             return Ok(article);
         }
 
-        // POST api/articles
+        // POST api/articles - создаем статью; в теле: Title, Url, ChannelName
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] Article article)
+        [Authorize(Roles = "Admin")] // добавление только для Admin
+        public async Task<ActionResult> Create([FromBody] ArticleCreateRequest req)
         {
-            _db.Articles.Add(article);
-            await _db.SaveChangesAsync();
-            return Ok(article);
+            var channel = await _context.RSSChannels
+                .Where(r => EF.Functions.Like(r.Name.ToLower(), req.ChannelName.ToLower()))
+                .FirstOrDefaultAsync();
+            if (channel == null) return BadRequest("Channel not found");
+
+            var article = new Article
+            {
+                Title = req.Title,
+                Url = req.Url,
+                PublishedAt = req.PublishedAt == default ? DateTime.UtcNow : req.PublishedAt,
+                RSSChannelId = channel.Id
+            };
+
+            if (!article.IsValidUrl()) return BadRequest("Invalid URL");
+
+            _context.Articles.Add(article);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetByTitle), new { title = article.Title }, article);
         }
 
-        // PUT api/articles/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Article updated)
+        // PUT api/articles/{title} - Admin
+        [HttpPut("{title}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Update(string title, [FromBody] ArticleUpdateRequest req)
         {
-            var article = await _db.Articles.FindAsync(id);
-            if (article == null) return NotFound();
+            var art = await _context.Articles
+                .FirstOrDefaultAsync(a => EF.Functions.Like(a.Title, title));
 
-            article.Title = updated.Title;
-            article.Url = updated.Url;
-            article.PublishedAt = updated.PublishedAt;
-            article.CategoryId = updated.CategoryId;
+            if (art == null) return NotFound();
 
-            await _db.SaveChangesAsync();
-            return Ok(article);
+            // Если сменили канал по имени:
+            if (!string.IsNullOrWhiteSpace(req.ChannelName))
+            {
+                var ch = await _context.RSSChannels
+                    .FirstOrDefaultAsync(c => EF.Functions.Like(c.Name, req.ChannelName));
+
+                if (ch == null)
+                    return BadRequest("Channel not found");
+
+                art.RSSChannelId = ch.Id;
+            }
+
+            art.Title = req.Title ?? art.Title;
+            art.Url = req.Url ?? art.Url;
+
+            if (req.PublishedAt != null)
+                art.PublishedAt = req.PublishedAt.Value;
+
+            await _context.SaveChangesAsync();
+            return Ok(art);
         }
 
-        // DELETE api/articles/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        // DELETE api/articles/{title} - Admin
+        [HttpDelete("{title}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Delete(string title)
         {
-            var article = await _db.Articles.FindAsync(id);
-            if (article == null) return NotFound();
+            var art = await _context.Articles
+                .FirstOrDefaultAsync(a => EF.Functions.Like(a.Title, title));
+            if (art == null) return NotFound();
 
-            _db.Articles.Remove(article);
-            await _db.SaveChangesAsync();
-            return NoContent();
+            _context.Articles.Remove(art);
+            await _context.SaveChangesAsync();
+            return Ok("Article deleted");
         }
+    }
 
-        // EXTRA: поиск по названию
-        // GET api/articles/search?title=physics
-        [HttpGet("search")]
-        public async Task<IActionResult> Search(string title)
-        {
-            var result = await _db.Articles
-                .Where(a => a.Title.Contains(title))
-                .ToListAsync();
+    public class ArticleCreateRequest
+    {
+        public string Title { get; set; } = "";
+        public string Url { get; set; } = "";
+        public string ChannelName { get; set; } = "";
+        public DateTime PublishedAt { get; set; } = default;
+    }
 
-            return Ok(result);
-        }
+    public class ArticleUpdateRequest
+    {
+        public string? Title { get; set; }
+        public string? Url { get; set; }
+        public string? ChannelName { get; set; }
+        public DateTime? PublishedAt { get; set; }
     }
 }

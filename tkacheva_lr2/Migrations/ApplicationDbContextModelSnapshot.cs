@@ -56,11 +56,11 @@ namespace tkacheva_lr2.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("PublishedAt")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("RSSChannelId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -72,7 +72,7 @@ namespace tkacheva_lr2.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("RSSChannelId");
 
                     b.ToTable("Articles");
 
@@ -80,22 +80,22 @@ namespace tkacheva_lr2.Migrations
                         new
                         {
                             Id = 1,
-                            CategoryId = 1,
-                            PublishedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Лазеры в физике",
-                            Url = "http://example.com/laser"
+                            PublishedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RSSChannelId = 1,
+                            Title = "Quantum mechanics",
+                            Url = "https://example.com/qm"
                         },
                         new
                         {
                             Id = 2,
-                            CategoryId = 2,
-                            PublishedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Title = "Органическая химия",
-                            Url = "http://example.com/organic"
+                            PublishedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RSSChannelId = 2,
+                            Title = "Organic chemistry",
+                            Url = "https://example.com/organic"
                         });
                 });
 
-            modelBuilder.Entity("tkacheva_lr2.Models.Category", b =>
+            modelBuilder.Entity("tkacheva_lr2.Models.RSSChannel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -108,35 +108,43 @@ namespace tkacheva_lr2.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("RSSChannels");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Name = "Физика"
+                            Description = "Physics articles",
+                            Name = "Physics",
+                            Url = ""
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Химия"
+                            Description = "Articles on chemistry",
+                            Name = "Chemistry",
+                            Url = ""
                         });
                 });
 
             modelBuilder.Entity("tkacheva_lr2.Models.Article", b =>
                 {
-                    b.HasOne("tkacheva_lr2.Models.Category", "Category")
+                    b.HasOne("tkacheva_lr2.Models.RSSChannel", "RSSChannel")
                         .WithMany("Articles")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("RSSChannelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("RSSChannel");
                 });
 
-            modelBuilder.Entity("tkacheva_lr2.Models.Category", b =>
+            modelBuilder.Entity("tkacheva_lr2.Models.RSSChannel", b =>
                 {
                     b.Navigation("Articles");
                 });

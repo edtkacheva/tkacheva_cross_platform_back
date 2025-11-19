@@ -3,9 +3,24 @@
     public class AppUser
     {
         public int Id { get; set; }
+        public string UserName { get; set; } = "";
+        public string Password { get; set; } = "";
 
-        public string UserName { get; set; } = string.Empty;
+        // ====== Бизнес-логика ======
 
-        public string Password { get; set; } = string.Empty;
+        public bool IsPasswordStrong()
+        {
+            return Password.Length >= 6;
+        }
+
+        public void ChangePassword(string newPassword)
+        {
+            Password = newPassword;
+        }
+
+        public bool IsAdmin()
+        {
+            return UserName.ToLower().Contains("admin");
+        }
     }
 }

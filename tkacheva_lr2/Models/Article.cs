@@ -3,25 +3,29 @@
     public class Article
     {
         public int Id { get; set; }
-        public string Title { get; set; } = null!;
-        public string Url { get; set; } = null!;
-        public DateTime PublishedAt { get; set; }
-        public int CategoryId { get; set; }
-        public Category? Category { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Url { get; set; } = string.Empty;
+        public DateTime PublishedAt { get; set; } = DateTime.UtcNow;
 
-        public string GetSummary(int maxLength = 100)
+        // FK → RSSChannel
+        public int RSSChannelId { get; set; }
+        public RSSChannel? RSSChannel { get; set; }
+
+        // ===== Бизнес-логика =====
+
+        public bool IsValidUrl()
         {
-            if (!string.IsNullOrWhiteSpace(Title))
-                return Title.Length <= maxLength ? Title : Title.Substring(0, maxLength) + "...";
-            return Url.Length <= maxLength ? Url : Url.Substring(0, maxLength) + "...";
+            return Uri.TryCreate(Url, UriKind.Absolute, out _);
         }
 
-        public bool IsUrlValid()
+        public string ShortTitle()
         {
-            return Uri.TryCreate(Url, UriKind.Absolute, out var uri)
-                   && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+            return Title.Length <= 20 ? Title : Title[..20] + "...";
         }
 
-        public void AssignCategory(int categoryId) => CategoryId = categoryId;
+        public void UpdatePublishDate()
+        {
+            PublishedAt = DateTime.UtcNow;
+        }
     }
 }
