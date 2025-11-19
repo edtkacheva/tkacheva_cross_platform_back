@@ -7,11 +7,8 @@
         public string Url { get; set; } = string.Empty;
         public DateTime PublishedAt { get; set; } = DateTime.UtcNow;
 
-        // FK → RSSChannel
         public int RSSChannelId { get; set; }
         public RSSChannel? RSSChannel { get; set; }
-
-        // ===== Бизнес-логика =====
 
         public bool IsValidUrl()
         {

@@ -18,7 +18,7 @@ namespace tkacheva_lr2.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Article → RSSChannel (1 ко многим)
+            // Article → RSSChannel
             modelBuilder.Entity<Article>()
                 .HasOne(a => a.RSSChannel)
                 .WithMany(c => c.Articles)

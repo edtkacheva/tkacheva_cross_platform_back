@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using tkacheva_lr2.Data;
 using tkacheva_lr2.Models;
+using tkacheva_lr2.Services;
 
 namespace tkacheva_lr2.Controllers
 {
@@ -10,93 +9,72 @@ namespace tkacheva_lr2.Controllers
     [Route("api/users")]
     public class UsersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        public UsersController(ApplicationDbContext context) => _context = context;
+        private readonly UserService _userService;
 
+        public UsersController(UserService userService)
+        {
+            _userService = userService;
+        }
 
-        // GET api/users
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetAll()
         {
-            return Ok(await _context.AppUsers.AsNoTracking().ToListAsync());
+            var users = await _userService.GetAllUsersAsync();
+            return Ok(users);
         }
 
-
-        // GET api/users/{username}
         [HttpGet("{username}")]
         [Authorize]
         public async Task<ActionResult<AppUser>> GetByName(string username)
         {
-            var user = await _context.AppUsers
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u =>
-                    u.UserName.ToLower() == username.ToLower());
-
+            var user = await _userService.GetUserByNameAsync(username);
             if (user == null)
                 return NotFound($"User '{username}' not found");
 
             return Ok(user);
         }
 
-
-        // POST api/users — регистрация
         [HttpPost]
         [AllowAnonymous]
         public async Task<ActionResult> Create([FromBody] AppUser user)
         {
-            if (!user.IsPasswordStrong())
-                return BadRequest("Password is too weak (min 6 chars).");
-
-            if (await _context.AppUsers.AnyAsync(u =>
-                u.UserName.ToLower() == user.UserName.ToLower()))
-                return Conflict("UserName already exists.");
-
-            // EF сам создаёт Id (AUTOINCREMENT)
-            _context.AppUsers.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetByName),
-                new { username = user.UserName }, user);
+            try
+            {
+                var createdUser = await _userService.CreateUserAsync(user);
+                return CreatedAtAction(nameof(GetByName), new { username = createdUser.UserName }, createdUser);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
-
-        // PUT api/users/{username}
         [HttpPut("{username}")]
         [Authorize]
         public async Task<ActionResult> Update(string username, [FromBody] AppUser data)
         {
-            // Явная проверка роли
             if (!User.IsInRole("Admin"))
                 return Forbid("Only admin can update users.");
 
-            var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
-
-            if (user == null)
-                return NotFound("User not found.");
-
-            if (!string.IsNullOrWhiteSpace(data.UserName))
+            try
             {
-                var exists = await _context.AppUsers.AnyAsync(u =>
-                    u.UserName.ToLower() == data.UserName.ToLower() &&
-                    u.Id != user.Id);
+                var user = await _userService.UpdateUserAsync(username, data);
+                if (user == null)
+                    return NotFound("User not found.");
 
-                if (exists)
-                    return Conflict("New username already taken.");
-
-                user.UserName = data.UserName;
+                return Ok(user);
             }
-
-            if (!string.IsNullOrWhiteSpace(data.Password))
-                user.Password = data.Password;
-
-            await _context.SaveChangesAsync();
-            return Ok(user);
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
-
-        // DELETE api/users/{username}
         [HttpDelete("{username}")]
         [Authorize]
         public async Task<ActionResult> Delete(string username)
@@ -104,14 +82,9 @@ namespace tkacheva_lr2.Controllers
             if (!User.IsInRole("Admin"))
                 return Forbid("Only admin can delete users.");
 
-            var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
-
-            if (user == null)
+            var result = await _userService.DeleteUserAsync(username);
+            if (!result)
                 return NotFound();
-
-            _context.AppUsers.Remove(user);
-            await _context.SaveChangesAsync();
 
             return Ok("User deleted");
         }

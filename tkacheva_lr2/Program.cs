@@ -3,15 +3,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using tkacheva_lr2.Data;
+using tkacheva_lr2.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ====== Добавляем DbContext ======
+// Добавляем DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=users.db"));
 
+// Регистрация сервисов
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<RSSChannelService>();
+builder.Services.AddScoped<ArticleService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ReportService>();
 
-// ====== Настройка контроллеров + JSON (чтобы избежать циклов) ======
+// Настройка контроллеров + JSON
 builder.Services.AddControllers()
     .AddJsonOptions(o =>
     {
@@ -19,16 +26,13 @@ builder.Services.AddControllers()
         o.JsonSerializerOptions.WriteIndented = true;
     });
 
-
-// ====== Настройка Swagger ======
+// Настройка Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-// ====== JWT Авторизация ======
+// JWT Авторизация
 var jwtKey = builder.Configuration["JwtKey"] ?? "super_puper_duper_secret_key_12345678901234567890";
 
-// Добавляем Authentication + JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -42,12 +46,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// Авторизация (роли + правила)
 builder.Services.AddAuthorization();
 
-
-// ====== Старт приложения ======
-
+// Старт приложения
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -57,11 +58,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-// важно! авторизация должна идти после UseRouting
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

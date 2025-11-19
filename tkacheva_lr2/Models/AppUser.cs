@@ -6,8 +6,6 @@
         public string UserName { get; set; } = "";
         public string Password { get; set; } = "";
 
-        // ====== Бизнес-логика ======
-
         public bool IsPasswordStrong()
         {
             return Password.Length >= 6;

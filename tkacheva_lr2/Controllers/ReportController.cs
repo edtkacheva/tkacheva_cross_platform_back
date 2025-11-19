@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using tkacheva_lr2.Data;
+using tkacheva_lr2.Services;
 
 namespace tkacheva_lr2.Controllers
 {
@@ -8,46 +7,27 @@ namespace tkacheva_lr2.Controllers
     [Route("api/report")]
     public class ReportController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ReportService _reportService;
 
-        public ReportController(ApplicationDbContext context)
+        public ReportController(ReportService reportService)
         {
-            _context = context;
+            _reportService = reportService;
         }
 
         [HttpGet("by-channel/{channelName}")]
-        public IActionResult GetArticlesByChannel(string channelName)
+        public async Task<IActionResult> GetArticlesByChannel(string channelName)
         {
-            var channel = _context.RSSChannels
-                .FirstOrDefault(c => c.Name.Equals(channelName, StringComparison.OrdinalIgnoreCase));
-
-            if (channel == null)
+            var report = await _reportService.GetArticlesByChannelAsync(channelName);
+            if (report == null)
                 return NotFound("Channel not found");
 
-            var articles = _context.Articles
-                .Where(a => a.RSSChannelId == channel.Id)
-                .ToList();
-
-            return Ok(new
-            {
-                Channel = channel.Name,
-                Count = articles.Count,
-                Articles = articles
-            });
+            return Ok(report);
         }
 
         [HttpGet("counts")]
-        public IActionResult GetCounts()
+        public async Task<IActionResult> GetCounts()
         {
-            var result = _context.RSSChannels
-                .Include(c => c.Articles)
-                .Select(c => new
-                {
-                    Channel = c.Name,
-                    Count = c.Articles.Count
-                })
-                .ToList();
-
+            var result = await _reportService.GetChannelCountsAsync();
             return Ok(result);
         }
     }
