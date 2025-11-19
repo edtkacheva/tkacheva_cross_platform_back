@@ -148,7 +148,7 @@
               "RelativeDocumentMoniker": "Services\\ReportService.cs",
               "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\ReportService.cs",
               "RelativeToolTip": "Services\\ReportService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAcwAcAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-19T14:28:09.217Z",
               "EditorCaption": ""
@@ -163,8 +163,7 @@
               "RelativeToolTip": "Services\\AuthService.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAA5wCwAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T14:27:53.586Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-19T14:27:53.586Z"
             },
             {
               "$type": "Document",
@@ -176,8 +175,7 @@
               "RelativeToolTip": "Services\\ArticleService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T14:27:37.798Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-19T14:27:37.798Z"
             },
             {
               "$type": "Document",
@@ -189,8 +187,7 @@
               "RelativeToolTip": "Services\\RSSChannelService.cs",
               "ViewState": "AgIAAEAAAAAAAAAAAAAAADMAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T14:27:09.795Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-19T14:27:09.795Z"
             },
             {
               "$type": "Document",
@@ -202,8 +199,7 @@
               "RelativeToolTip": "Services\\UserService.cs",
               "ViewState": "AgIAAEIAAAAAAAAAAAAmwFMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T14:26:45.06Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-19T14:26:45.06Z"
             },
             {
               "$type": "Document",
@@ -215,8 +211,7 @@
               "RelativeToolTip": "Controllers\\AuthController.cs",
               "ViewState": "AgIAABYAAAAAAAAAAAAAACAAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-17T21:54:26.145Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-17T21:54:26.145Z"
             },
             {
               "$type": "Document",
@@ -228,8 +223,7 @@
               "RelativeToolTip": "Controllers\\ReportController.cs",
               "ViewState": "AgIAACEAAAAAAAAAAAAAACEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-17T09:53:46.786Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-17T09:53:46.786Z"
             },
             {
               "$type": "Document",
@@ -241,8 +235,7 @@
               "RelativeToolTip": "Controllers\\ArticlesController.cs",
               "ViewState": "AgIAAGEAAAAAAAAAAAAywBUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T21:05:46.19Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-16T21:05:46.19Z"
             },
             {
               "$type": "Document",
@@ -254,8 +247,7 @@
               "RelativeToolTip": "Controllers\\RSSChannelController.cs",
               "ViewState": "AgIAAFEAAAAAAAAAAAAmwDcAAABaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T21:05:20.353Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-16T21:05:20.353Z"
             },
             {
               "$type": "Document",
@@ -267,8 +259,7 @@
               "RelativeToolTip": "Controllers\\UsersController.cs",
               "ViewState": "AgIAAEYAAAAAAAAAAAAcwEIAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T18:34:49.978Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-16T18:34:49.978Z"
             },
             {
               "$type": "Document",
@@ -280,8 +271,7 @@
               "RelativeToolTip": "Data\\ApplicationDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAADAAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T18:07:33.87Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-16T18:07:33.87Z"
             },
             {
               "$type": "Document",
@@ -293,8 +283,7 @@
               "RelativeToolTip": "Models\\AppUser.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T18:03:45.719Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-16T18:03:45.719Z"
             },
             {
               "$type": "Document",
@@ -306,8 +295,7 @@
               "RelativeToolTip": "Models\\RSSChannel.cs",
               "ViewState": "AgIAAAoAAAAAAAAAAAAcwAMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T18:03:09.727Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-16T18:03:09.727Z"
             },
             {
               "$type": "Document",
@@ -319,8 +307,7 @@
               "RelativeToolTip": "Models\\Article.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T18:02:17.259Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-16T18:02:17.259Z"
             },
             {
               "$type": "Document",
@@ -332,8 +319,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-14T10:02:10.813Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-14T10:02:10.813Z"
             }
           ]
         }
