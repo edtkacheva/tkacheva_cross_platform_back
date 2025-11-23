@@ -43,7 +43,8 @@ namespace tkacheva_lr2.Controllers
             {
                 Title = req.Title,
                 Url = req.Url,
-                PublishedAt = req.PublishedAt == default ? DateTime.UtcNow : req.PublishedAt
+                PublishedAt = req.PublishedAt == default ? DateTime.UtcNow : req.PublishedAt,
+                Description = req.Description
             };
 
             try
@@ -64,7 +65,7 @@ namespace tkacheva_lr2.Controllers
             try
             {
                 var article = await _articleService.UpdateArticleAsync(
-                    title, req.Title, req.Url, req.ChannelName, req.PublishedAt);
+                    title, req.Title, req.Url, req.ChannelName, req.PublishedAt, req.Description);
 
                 if (article == null) return NotFound();
                 return Ok(article);
@@ -83,6 +84,15 @@ namespace tkacheva_lr2.Controllers
             if (!result) return NotFound();
             return Ok("Article deleted");
         }
+
+        [HttpGet("search/description/{text}")]
+        [Authorize]
+        public async Task<IActionResult> SearchByDescription(string text)
+        {
+            var result = await _articleService.SearchByDescriptionAsync(text);
+            return Ok(result);
+        }
+
     }
 
     public class ArticleCreateRequest
@@ -91,6 +101,7 @@ namespace tkacheva_lr2.Controllers
         public string Url { get; set; } = "";
         public string ChannelName { get; set; } = "";
         public DateTime PublishedAt { get; set; } = default;
+        public string? Description { get; set; } = "";
     }
 
     public class ArticleUpdateRequest
@@ -99,5 +110,6 @@ namespace tkacheva_lr2.Controllers
         public string? Url { get; set; }
         public string? ChannelName { get; set; }
         public DateTime? PublishedAt { get; set; }
+        public string? Description { get; set; }
     }
 }

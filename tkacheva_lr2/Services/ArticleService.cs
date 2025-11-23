@@ -47,7 +47,7 @@ namespace tkacheva_lr2.Services
             return article;
         }
 
-        public async Task<Article?> UpdateArticleAsync(string title, string? newTitle, string? url, string? channelName, DateTime? publishedAt)
+        public async Task<Article?> UpdateArticleAsync(string title, string? newTitle, string? url, string? channelName, DateTime? publishedAt, string? Description)
         {
             var article = await _context.Articles
                 .FirstOrDefaultAsync(a => EF.Functions.Like(a.Title, title));
@@ -85,6 +85,16 @@ namespace tkacheva_lr2.Services
             _context.Articles.Remove(article);
             await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<List<Article>> SearchByDescriptionAsync(string text)
+        {
+            text = text.Trim();
+
+            return await _context.Articles
+                .Where(a => a.Description != null &&
+                            EF.Functions.Like(a.Description, $"%{text}%"))
+                .ToListAsync();
         }
     }
 }

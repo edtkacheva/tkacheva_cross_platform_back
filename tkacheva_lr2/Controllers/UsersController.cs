@@ -88,5 +88,32 @@ namespace tkacheva_lr2.Controllers
 
             return Ok("User deleted");
         }
+
+        [HttpPost("{username}/subscribe/{channelName}")]
+        [Authorize]
+        public async Task<ActionResult> Subscribe(string username, string channelName)
+        {
+            var ok = await _userService.SubscribeAsync(username, channelName);
+            if (!ok) return NotFound();
+            return Ok($"User {username} subscribed to {channelName}");
+        }
+
+        [HttpPost("{username}/unsubscribe/{channelName}")]
+        [Authorize]
+        public async Task<ActionResult> Unsubscribe(string username, string channelName)
+        {
+            var ok = await _userService.UnsubscribeAsync(username, channelName);
+            if (!ok) return NotFound();
+            return Ok($"User {username} unsubscribed from {channelName}");
+        }
+
+        [HttpGet("{username}/subscriptions")]
+        [Authorize]
+        public async Task<ActionResult> GetSubscriptions(string username)
+        {
+            var list = await _userService.GetSubscriptionsAsync(username);
+            return Ok(list);
+        }
+
     }
 }

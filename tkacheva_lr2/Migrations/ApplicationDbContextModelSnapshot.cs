@@ -17,6 +17,21 @@ namespace tkacheva_lr2.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
+            modelBuilder.Entity("AppUserRSSChannel", b =>
+                {
+                    b.Property<int>("SubscribedChannelsId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SubscribersId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("SubscribedChannelsId", "SubscribersId");
+
+                    b.HasIndex("SubscribersId");
+
+                    b.ToTable("UserChannelSubscriptions", (string)null);
+                });
+
             modelBuilder.Entity("tkacheva_lr2.Models.AppUser", b =>
                 {
                     b.Property<int>("Id")
@@ -55,6 +70,9 @@ namespace tkacheva_lr2.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("PublishedAt")
                         .HasColumnType("TEXT");
@@ -131,6 +149,21 @@ namespace tkacheva_lr2.Migrations
                             Name = "Chemistry",
                             Url = ""
                         });
+                });
+
+            modelBuilder.Entity("AppUserRSSChannel", b =>
+                {
+                    b.HasOne("tkacheva_lr2.Models.RSSChannel", null)
+                        .WithMany()
+                        .HasForeignKey("SubscribedChannelsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("tkacheva_lr2.Models.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("SubscribersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("tkacheva_lr2.Models.Article", b =>

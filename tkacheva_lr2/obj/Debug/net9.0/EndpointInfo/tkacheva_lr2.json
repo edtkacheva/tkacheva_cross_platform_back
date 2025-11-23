@@ -153,6 +153,28 @@
         }
       }
     },
+    "/api/articles/search/description/{text}": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "text",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/auth/login": {
       "post": {
         "tags": [
@@ -177,40 +199,6 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/report/by-channel/{channelName}": {
-      "get": {
-        "tags": [
-          "Report"
-        ],
-        "parameters": [
-          {
-            "name": "channelName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/report/counts": {
-      "get": {
-        "tags": [
-          "Report"
-        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -547,6 +535,88 @@
           }
         }
       }
+    },
+    "/api/users/{username}/subscribe/{channelName}": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/users/{username}/unsubscribe/{channelName}": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/users/{username}/subscriptions": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -564,6 +634,13 @@
           },
           "password": {
             "type": "string",
+            "nullable": true
+          },
+          "subscribedChannels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RSSChannel"
+            },
             "nullable": true
           }
         },
@@ -587,6 +664,10 @@
           "publishedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           },
           "rssChannelId": {
             "type": "integer",
@@ -616,6 +697,10 @@
           "publishedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -638,6 +723,10 @@
           "publishedAt": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -674,6 +763,13 @@
           },
           "description": {
             "type": "string",
+            "nullable": true
+          },
+          "subscribers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AppUser"
+            },
             "nullable": true
           },
           "articles": {

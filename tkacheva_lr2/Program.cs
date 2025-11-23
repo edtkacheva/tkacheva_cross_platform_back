@@ -16,7 +16,6 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<RSSChannelService>();
 builder.Services.AddScoped<ArticleService>();
 builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<ReportService>();
 
 // Настройка контроллеров + JSON
 builder.Services.AddControllers()

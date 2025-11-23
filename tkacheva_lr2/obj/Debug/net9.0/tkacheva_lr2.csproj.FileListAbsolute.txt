@@ -155,5 +155,6 @@ C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkach
 C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\obj\Debug\net9.0\tkacheva_lr2.pdb
 C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\obj\Debug\net9.0\tkacheva_lr2.genruntimeconfig.cache
 C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\obj\Debug\net9.0\ref\tkacheva_lr2.dll
-C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\bin\Debug\net9.0\tkacheva_api_collection.json
+C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\bin\Debug\net9.0\tkacheva_api_collection_v2.json
+C:\Users\katuha\Documents\files\study\7sem\cross_platform_dev\tkacheva_lr2\tkacheva_lr2\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

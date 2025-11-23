@@ -89,6 +89,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
+    "Method": "SearchByDescription",
+    "RelativePath": "api/articles/search/description/{text}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "text",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "tkacheva_lr2.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/auth/login",
@@ -102,32 +118,6 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "tkacheva_lr2.Controllers.ReportController",
-    "Method": "GetArticlesByChannel",
-    "RelativePath": "api/report/by-channel/{channelName}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "channelName",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "tkacheva_lr2.Controllers.ReportController",
-    "Method": "GetCounts",
-    "RelativePath": "api/report/counts",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -322,6 +312,64 @@
     "Parameters": [
       {
         "Name": "username",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.UsersController",
+    "Method": "Subscribe",
+    "RelativePath": "api/users/{username}/subscribe/{channelName}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "username",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "channelName",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.UsersController",
+    "Method": "GetSubscriptions",
+    "RelativePath": "api/users/{username}/subscriptions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "username",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.UsersController",
+    "Method": "Unsubscribe",
+    "RelativePath": "api/users/{username}/unsubscribe/{channelName}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "username",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "channelName",
         "Type": "System.String",
         "IsRequired": true
       }

@@ -80,5 +80,60 @@ namespace tkacheva_lr2.Services
             return await _context.AppUsers.AnyAsync(u =>
                 u.UserName.ToLower() == username.ToLower());
         }
+
+        public async Task<bool> SubscribeAsync(string username, string channelName)
+        {
+            var user = await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
+
+            if (user == null)
+                return false;
+
+            var channel = await _context.RSSChannels
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == channelName.ToLower());
+
+            if (channel == null)
+                return false;
+
+            if (!user.SubscribedChannels.Contains(channel))
+            {
+                user.SubscribedChannels.Add(channel);
+                await _context.SaveChangesAsync();
+            }
+
+            return true;
+        }
+
+        public async Task<bool> UnsubscribeAsync(string username, string channelName)
+        {
+            var user = await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
+
+            if (user == null)
+                return false;
+
+            var channel = user.SubscribedChannels
+                .FirstOrDefault(c => c.Name.ToLower() == channelName.ToLower());
+
+            if (channel == null)
+                return false;
+
+            user.SubscribedChannels.Remove(channel);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<List<RSSChannel>> GetSubscriptionsAsync(string username)
+        {
+            var user = await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
+
+            return user?.SubscribedChannels ?? new List<RSSChannel>();
+        }
+
     }
 }

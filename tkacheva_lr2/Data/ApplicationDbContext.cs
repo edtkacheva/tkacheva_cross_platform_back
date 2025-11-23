@@ -18,6 +18,11 @@ namespace tkacheva_lr2.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<AppUser>()
+                .HasMany(u => u.SubscribedChannels)
+                .WithMany(c => c.Subscribers)
+                .UsingEntity(j => j.ToTable("UserChannelSubscriptions"));
+
             // Article → RSSChannel
             modelBuilder.Entity<Article>()
                 .HasOne(a => a.RSSChannel)
