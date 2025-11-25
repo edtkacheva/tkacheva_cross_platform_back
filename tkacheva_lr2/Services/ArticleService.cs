@@ -41,6 +41,7 @@ namespace tkacheva_lr2.Services
                 throw new ArgumentException("Invalid URL");
 
             article.RSSChannelId = channel.Id;
+            article.RSSChannel = channel;
             _context.Articles.Add(article);
             await _context.SaveChangesAsync();
 
@@ -63,6 +64,7 @@ namespace tkacheva_lr2.Services
                     throw new ArgumentException("Channel not found");
 
                 article.RSSChannelId = channel.Id;
+                article.RSSChannel = channel;
             }
 
             article.Title = newTitle ?? article.Title;
@@ -92,6 +94,7 @@ namespace tkacheva_lr2.Services
             text = text.Trim();
 
             return await _context.Articles
+                .Include(a => a.RSSChannel)
                 .Where(a => a.Description != null &&
                             EF.Functions.Like(a.Description, $"%{text}%"))
                 .ToListAsync();
