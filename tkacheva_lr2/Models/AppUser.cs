@@ -19,7 +19,7 @@
 
         public bool IsAdmin()
         {
-            return UserName.ToLower().Contains("admin");
+            return Id == 1;
         }
     }
 }

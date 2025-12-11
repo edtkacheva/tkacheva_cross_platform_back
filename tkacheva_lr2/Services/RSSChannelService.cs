@@ -79,5 +79,21 @@ namespace tkacheva_lr2.Services
             return await _context.RSSChannels.AnyAsync(c =>
                 c.Name.ToLower() == name.ToLower());
         }
+
+        public async Task SubscribeUserAsync(string username, string channelName)
+        {
+            var user = await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
+
+            var channel = await _context.RSSChannels
+                .FirstOrDefaultAsync(c => c.Name.ToLower() == channelName.ToLower());
+
+            if (user != null && channel != null && !user.SubscribedChannels.Contains(channel))
+            {
+                user.SubscribedChannels.Add(channel);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

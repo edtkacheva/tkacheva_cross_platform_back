@@ -37,18 +37,17 @@ namespace tkacheva_lr2.Controllers
         [Authorize]
         public async Task<ActionResult> Create([FromBody] RSSChannel channel)
         {
-            if (!User.IsInRole("Admin"))
-                return Forbid("Only admin can create channels.");
+            var createdChannel = await _channelService.CreateChannelAsync(channel);
 
-            try
-            {
-                var createdChannel = await _channelService.CreateChannelAsync(channel);
-                return CreatedAtAction(nameof(GetByName), new { name = createdChannel.Name }, createdChannel);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(ex.Message);
-            }
+            // Автоподписка
+            var username = User.Identity?.Name;
+
+            if (username == null)
+                return Unauthorized("Cannot determine current user.");
+
+            await _channelService.SubscribeUserAsync(username!, createdChannel.Name);
+
+            return CreatedAtAction(nameof(GetByName), new { name = createdChannel.Name }, createdChannel);
         }
 
         [HttpPut("{name}")]

@@ -17,7 +17,7 @@ namespace tkacheva_lr2.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetAll()
         {
             var users = await _userService.GetAllUsersAsync();
@@ -28,9 +28,18 @@ namespace tkacheva_lr2.Controllers
         [Authorize]
         public async Task<ActionResult<AppUser>> GetByName(string username)
         {
+            var requester = User.Identity?.Name;
+
+            if (requester == null)
+                return Unauthorized("Cannot determine current user.");
+
+            // Админ может смотреть всех
+            if (!User.IsInRole("Admin") && requester.ToLower() != username.ToLower())
+                return Forbid("You can only view your own profile.");
+
             var user = await _userService.GetUserByNameAsync(username);
             if (user == null)
-                return NotFound($"User '{username}' not found");
+                return NotFound();
 
             return Ok(user);
         }

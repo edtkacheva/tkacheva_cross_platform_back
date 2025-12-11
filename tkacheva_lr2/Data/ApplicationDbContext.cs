@@ -31,8 +31,7 @@ namespace tkacheva_lr2.Data
 
             // Users
             modelBuilder.Entity<AppUser>().HasData(
-                new AppUser { Id = 1, UserName = "admin", Password = "admin" },
-                new AppUser { Id = 2, UserName = "user", Password = "1234" }
+                new AppUser { Id = 1, UserName = "admin", Password = "longpasswordforadmin" }
             );
 
             // RSS Channels
