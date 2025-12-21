@@ -1,0 +1,153 @@
+{
+    "info": {
+      "name": "tkacheva_lr2 API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+  
+      {
+        "name": "AUTH — Register",
+        "request": {
+          "method": "POST",
+          "header": [],
+          "body": { "mode": "raw", "raw": "{\n  \"userName\": \"testuser\",\n  \"password\": \"123456\"\n}" },
+          "url": { "raw": "https://localhost:7110/api/users", "protocol": "https", "host": ["localhost"], "port": "7110", "path": ["api", "users"] }
+        }
+      },
+      {
+        "name": "AUTH — Login",
+        "request": {
+          "method": "POST",
+          "body": { "mode": "raw", "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"123456\"\n}" },
+          "url": { "raw": "https://localhost:7110/api/auth/login", "protocol": "https", "host": ["localhost"], "port": "7110", "path": ["api", "auth", "login"] }
+        }
+      },
+  
+      {
+        "name": "Users — Get All",
+        "request": {
+          "method": "GET",
+          "url": "https://localhost:7110/api/users"
+        }
+      },
+      {
+        "name": "Users — Get By Name",
+        "request": {
+          "method": "GET",
+          "url": "https://localhost:7110/api/users/testuser"
+        }
+      },
+      {
+        "name": "Users — Update",
+        "request": {
+          "method": "PUT",
+          "body": { "mode": "raw", "raw": "{\n  \"userName\": \"newname\",\n  \"password\": \"newpass\"\n}" },
+          "url": "https://localhost:7110/api/users/testuser"
+        }
+      },
+      {
+        "name": "Users — Delete",
+        "request": {
+          "method": "DELETE",
+          "url": "https://localhost:7110/api/users/testuser"
+        }
+      },
+  
+      {
+        "name": "Subscriptions — Subscribe",
+        "request": {
+          "method": "POST",
+          "url": "https://localhost:7110/api/users/testuser/subscribe/TechNews"
+        }
+      },
+      {
+        "name": "Subscriptions — Unsubscribe",
+        "request": {
+          "method": "POST",
+          "url": "https://localhost:7110/api/users/testuser/unsubscribe/TechNews"
+        }
+      },
+      {
+        "name": "Subscriptions — Get",
+        "request": {
+          "method": "GET",
+          "url": "https://localhost:7110/api/users/testuser/subscriptions"
+        }
+      },
+  
+      {
+        "name": "RSS — Create Channel",
+        "request": {
+          "method": "POST",
+          "body": { "mode": "raw", "raw": "{\n  \"name\": \"TechNews\",\n  \"url\": \"https://news.example.com/rss\"\n}" },
+          "url": "https://localhost:7110/api/rss"
+        }
+      },
+      {
+        "name": "RSS — Get All",
+        "request": { "method": "GET", "url": "https://localhost:7110/api/rss" }
+      },
+      {
+        "name": "RSS — Get By Name",
+        "request": { "method": "GET", "url": "https://localhost:7110/api/rss/TechNews" }
+      },
+      {
+        "name": "RSS — Update",
+        "request": {
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"name\": \"TechNewsUpdated\",\n  \"url\": \"https://newurl.com/rss\"\n}"
+          },
+          "url": "https://localhost:7110/api/rss/TechNews"
+        }
+      },
+      {
+        "name": "RSS — Delete",
+        "request": {
+          "method": "DELETE",
+          "url": "https://localhost:7110/api/rss/TechNewsUpdated"
+        }
+      },
+  
+      {
+        "name": "Articles — Create",
+        "request": {
+          "method": "POST",
+          "body": { "mode": "raw", "raw": "{\"title\":\"AI Revolution\",\"url\":\"https://ai.example.com\",\"description\":\"Artificial intelligence breakthrough in 2025\",\"channelName\":\"TechNews\"}" },
+          "url": "https://localhost:7110/api/articles"
+        }
+      },
+      {
+        "name": "Articles — Get All",
+        "request": { "method": "GET", "url": "https://localhost:7110/api/articles" }
+      },
+      {
+        "name": "Articles — Get By Name",
+        "request": { "method": "GET", "url": "https://localhost:7110/api/articles/AI Revolution" }
+      },
+      {
+        "name": "Articles — Update",
+        "request": {
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"title\": \"Updated Title\",\n  \"description\": \"Updated description\",\n  \"content\": \"Updated content\"\n}"
+          },
+          "url": "https://localhost:7110/api/articles/1"
+        }
+      },
+      {
+        "name": "Articles — Delete",
+        "request": { "method": "DELETE", "url": "https://localhost:7110/api/articles/AI Revolution" }
+      },
+      {
+        "name": "Articles — Search by Description",
+        "request": {
+          "method": "GET",
+          "url": "https://localhost:7110/api/articles/search/description/text"
+        }
+      }
+    ]
+  }
+  
