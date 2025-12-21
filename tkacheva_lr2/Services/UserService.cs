@@ -15,7 +15,9 @@ namespace tkacheva_lr2.Services
 
         public async Task<List<AppUser>> GetAllUsersAsync()
         {
-            return await _context.AppUsers.AsNoTracking().ToListAsync();
+            return await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .ToListAsync();
         }
 
         public async Task<AppUser?> GetUserByNameAsync(string username)
@@ -69,6 +71,9 @@ namespace tkacheva_lr2.Services
                 .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
 
             if (user == null) return false;
+
+            if (user.IsAdmin())
+                throw new InvalidOperationException("Admin cannot be deleted");
 
             _context.AppUsers.Remove(user);
             await _context.SaveChangesAsync();

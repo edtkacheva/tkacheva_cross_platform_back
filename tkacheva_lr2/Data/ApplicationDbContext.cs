@@ -59,6 +59,12 @@ namespace tkacheva_lr2.Data
                     RSSChannelId = 2
                 }
             );
+
+            modelBuilder.Entity<Article>()
+              .HasOne(a => a.RSSChannel)
+              .WithMany(c => c.Articles)
+              .HasForeignKey(a => a.RSSChannelId)
+              .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -85,7 +85,7 @@ namespace tkacheva_lr2.Controllers
         }
 
         [HttpDelete("{username}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(string username)
         {
             if (!User.IsInRole("Admin"))
