@@ -89,4 +89,39 @@ public class ApiClient
     {
         public string Token { get; set; } = "";
     }
+
+    private async Task<TResponse?> PostJsonWithAuthRetry<TRequest, TResponse>(string relativeUrl, TRequest body, CancellationToken ct)
+    {
+        await EnsureAuthAsync(ct);
+
+        using var resp = await _httpClient.PostAsJsonAsync(relativeUrl, body, ct);
+
+        if (resp.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            _token = null;
+            _httpClient.DefaultRequestHeaders.Authorization = null;
+
+            await EnsureAuthAsync(ct);
+
+            using var resp2 = await _httpClient.PostAsJsonAsync(relativeUrl, body, ct);
+            resp2.EnsureSuccessStatusCode();
+            return await resp2.Content.ReadFromJsonAsync<TResponse>(cancellationToken: ct);
+        }
+
+        resp.EnsureSuccessStatusCode();
+        return await resp.Content.ReadFromJsonAsync<TResponse>(cancellationToken: ct);
+    }
+
+    public async Task<RssChannel> CreateChannelAsync(string name, string url, CancellationToken ct)
+    {
+        name = (name ?? "").Trim();
+        url = (url ?? "").Trim();
+
+        var body = new { name, url };
+
+        var created = await PostJsonWithAuthRetry<object, RssChannel>("api/rss", body, ct);
+        if (created == null) throw new InvalidOperationException("Create channel returned empty response.");
+        return created;
+    }
+
 }

@@ -8,6 +8,8 @@ using RSSTelegramBot;
 var botClient = new TelegramBotClient(BotConfig.BotToken);
 var apiClient = new ApiClient();
 
+var createFlow = new Dictionary<long, CreateFlowState>();
+
 using var cts = new CancellationTokenSource();
 
 var me = await botClient.GetMe(cts.Token);
@@ -50,6 +52,47 @@ static string GetCommandArg(string text, string cmd)
     return trimmed[(firstSpace + 1)..].Trim();
 }
 
+static bool TryValidateUrl(string input, out string normalizedUrl, out string error)
+{
+    normalizedUrl = "";
+    error = "";
+
+    input = (input ?? "").Trim();
+
+    if (string.IsNullOrWhiteSpace(input))
+    {
+        error = "пустая ссылка";
+        return false;
+    }
+
+    if (!input.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+        !input.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+    {
+        input = "https://" + input;
+    }
+
+    if (!Uri.TryCreate(input, UriKind.Absolute, out var uri))
+    {
+        error = "не удалось распознать URL";
+        return false;
+    }
+
+    if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
+    {
+        error = "разрешены только http/https ссылки";
+        return false;
+    }
+
+    if (string.IsNullOrWhiteSpace(uri.Host))
+    {
+        error = "у ссылки нет домена (host)";
+        return false;
+    }
+
+    normalizedUrl = uri.ToString();
+    return true;
+}
+
 async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken ct)
 {
     if (update.Message?.Type != MessageType.Text)
@@ -62,8 +105,55 @@ async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, Cancellation
     if (string.IsNullOrWhiteSpace(text))
         return;
 
+    bool IsCancel()
+        => IsCommand(text, "/cancel") ||
+           string.Equals(text, "отмена", StringComparison.OrdinalIgnoreCase) ||
+           string.Equals(text, "отменить", StringComparison.OrdinalIgnoreCase);
+
     try
     {
+        if (IsCancel())
+        {
+            createFlow.Remove(chatId);
+            await bot.SendMessage(chatId, "❎ Ок, отменено.", cancellationToken: ct);
+            return;
+        }
+
+        if (createFlow.TryGetValue(chatId, out var flow) && flow.Step != CreateFlowStep.None)
+        {
+            if (flow.Step == CreateFlowStep.AwaitName)
+            {
+                var name = text.Trim();
+
+                if (name.Length < 2)
+                {
+                    await bot.SendMessage(chatId, "Название слишком короткое. Введите название ещё раз или /cancel.", cancellationToken: ct);
+                    return;
+                }
+
+                createFlow[chatId] = new CreateFlowState(CreateFlowStep.AwaitUrl, name);
+                await bot.SendMessage(chatId, "Введите ссылку RSS-канала (пример: https://site.com/feed.xml)\nОтмена: /cancel", cancellationToken: ct);
+                return;
+            }
+
+            if (flow.Step == CreateFlowStep.AwaitUrl)
+            {
+                var urlText = text.Trim();
+
+                if (!TryValidateUrl(urlText, out var normalizedUrl, out var error))
+                {
+                    await bot.SendMessage(chatId, $"❌ Некорректная ссылка: {error}\nВведите ссылку ещё раз или /cancel.", cancellationToken: ct);
+                    return;
+                }
+
+                var created = await apiClient.CreateChannelAsync(flow.Name!, normalizedUrl, ct);
+                createFlow.Remove(chatId);
+
+                await bot.SendMessage(chatId, $"✅ Канал создан:\n• {created.Name}\n• {created.Url}", cancellationToken: ct);
+                return;
+            }
+        }
+
         if (IsCommand(text, "/start"))
         {
             await bot.SendMessage(
@@ -73,9 +163,18 @@ async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, Cancellation
                     "Команды:\n" +
                     "/channels — список каналов\n" +
                     "/articles — последние статьи\n" +
-                    "/search <текст> — поиск по описанию",
+                    "/search <текст> — поиск по описанию\n" +
+                    "/create — добавить RSS-канал\n" +
+                    "/cancel — отмена",
                 cancellationToken: ct
             );
+            return;
+        }
+
+        if (IsCommand(text, "/create"))
+        {
+            createFlow[chatId] = new CreateFlowState(CreateFlowStep.AwaitName, null);
+            await bot.SendMessage(chatId, "Введите название нового RSS-канала.\nОтмена: /cancel", cancellationToken: ct);
             return;
         }
 
@@ -115,7 +214,7 @@ async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, Cancellation
                 "📰 Последние статьи:\n\n" +
                 string.Join("\n\n", latest.Select(a =>
                     $"🗓 {a.PublishedAt:dd.MM.yyyy}\n" +
-                    $"📌 {a.RssChannel.Name}\n" +
+                    (a.RssChannel?.Name != null ? $"📌 {a.RssChannel.Name}\n" : "") +
                     $"📰 {a.Title}\n" +
                     $"🔗 {a.Url}"
                 ));
@@ -165,11 +264,13 @@ async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, Cancellation
     catch (HttpRequestException ex)
     {
         Console.WriteLine($"HTTP error: {ex}");
+        createFlow.Remove(chatId);
         await bot.SendMessage(chatId, "⚠️ Ошибка связи с сервером API.", cancellationToken: ct);
     }
     catch (Exception ex)
     {
         Console.WriteLine($"Unhandled error: {ex}");
+        createFlow.Remove(chatId);
         await bot.SendMessage(chatId, "⚠️ Внутренняя ошибка бота.", cancellationToken: ct);
     }
 }

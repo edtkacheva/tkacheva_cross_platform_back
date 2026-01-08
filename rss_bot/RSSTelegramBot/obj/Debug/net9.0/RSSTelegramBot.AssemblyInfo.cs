@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RSSTelegramBot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d4e126917d19cbdf7e5b3fab13dbe31ffa943b65")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+056eeb1f834b3298625c15d8a7b09e43de69ff98")]
 [assembly: System.Reflection.AssemblyProductAttribute("RSSTelegramBot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RSSTelegramBot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
