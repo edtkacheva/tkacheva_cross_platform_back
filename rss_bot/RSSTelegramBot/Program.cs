@@ -89,6 +89,12 @@ static bool TryValidateUrl(string input, out string normalizedUrl, out string er
         return false;
     }
 
+    if (!uri.Host.Contains('.') || uri.Host.Split('.').Last().Length < 2)
+    {
+        error = "неверный формат домена (нужен формат site.com)";
+        return false;
+    }
+
     normalizedUrl = uri.ToString();
     return true;
 }
