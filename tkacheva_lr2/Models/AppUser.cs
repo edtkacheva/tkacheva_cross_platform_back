@@ -6,6 +6,7 @@
         public string UserName { get; set; } = "";
         public string Password { get; set; } = "";
         public List<RSSChannel> SubscribedChannels { get; set; } = new();
+        public List<UserArticleState> ArticleStates { get; set; } = new();
 
         public bool IsPasswordStrong()
         {

@@ -93,6 +93,36 @@ namespace tkacheva_lr2.Controllers
             return Ok(result);
         }
 
+        [HttpGet("unread/{username}")]
+        [Authorize]
+        public async Task<IActionResult> GetUnreadForUser(string username)
+        {
+            var requester = User.Identity?.Name;
+            if (requester == null)
+                return Unauthorized();
+
+            if (!User.IsInRole("Admin") && requester.ToLower() != username.ToLower())
+                return Forbid();
+
+            var result = await _articleService.GetUnreadArticlesForUserAsync(username);
+            return Ok(result);
+        }
+
+        [HttpPost("{articleId}/mark-read")]
+        [Authorize]
+        public async Task<IActionResult> MarkAsRead(int articleId)
+        {
+            var username = User.Identity?.Name;
+            if (username == null)
+                return Unauthorized();
+
+            var ok = await _articleService.MarkAsReadAsync(username, articleId);
+            if (!ok)
+                return NotFound("Статья не найдена у пользователя.");
+
+            return Ok(new { message = "Статья отмечена как прочитанная." });
+        }
+
     }
 
     public class ArticleCreateRequest

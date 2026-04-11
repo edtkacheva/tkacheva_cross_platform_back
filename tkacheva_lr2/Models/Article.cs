@@ -10,6 +10,7 @@
 
         public int RSSChannelId { get; set; }
         public RSSChannel? RSSChannel { get; set; }
+        public List<UserArticleState> UserStates { get; set; } = new();
 
         public bool IsValidUrl()
         {

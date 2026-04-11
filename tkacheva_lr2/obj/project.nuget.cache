@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "+Aou4iZ4hGQ=",
+  "dgSpecHash": "j2quOevUgnw=",
   "success": true,
   "projectFilePath": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\tkacheva_lr2.csproj",
   "expectedPackageFiles": [
@@ -65,6 +65,7 @@
     "C:\\Users\\katuha\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
     "C:\\Users\\katuha\\.nuget\\packages\\system.reflection.metadata\\7.0.0\\system.reflection.metadata.7.0.0.nupkg.sha512",
     "C:\\Users\\katuha\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\katuha\\.nuget\\packages\\system.servicemodel.syndication\\10.0.5\\system.servicemodel.syndication.10.0.5.nupkg.sha512",
     "C:\\Users\\katuha\\.nuget\\packages\\system.text.json\\9.0.0\\system.text.json.9.0.0.nupkg.sha512",
     "C:\\Users\\katuha\\.nuget\\packages\\system.threading.channels\\7.0.0\\system.threading.channels.7.0.0.nupkg.sha512"
   ],

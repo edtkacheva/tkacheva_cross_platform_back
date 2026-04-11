@@ -13,6 +13,7 @@ namespace tkacheva_lr2.Data
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<RSSChannel> RSSChannels { get; set; }
+        public DbSet<UserArticleState> UserArticleStates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,6 +66,22 @@ namespace tkacheva_lr2.Data
               .WithMany(c => c.Articles)
               .HasForeignKey(a => a.RSSChannelId)
               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserArticleState>()
+                .HasOne(x => x.AppUser)
+                .WithMany(u => u.ArticleStates)
+                .HasForeignKey(x => x.AppUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                        modelBuilder.Entity<UserArticleState>()
+                            .HasOne(x => x.Article)
+                            .WithMany(a => a.UserStates)
+                            .HasForeignKey(x => x.ArticleId)
+                            .OnDelete(DeleteBehavior.Cascade);
+
+                        modelBuilder.Entity<UserArticleState>()
+                            .HasIndex(x => new { x.AppUserId, x.ArticleId })
+                            .IsUnique();
         }
     }
 }

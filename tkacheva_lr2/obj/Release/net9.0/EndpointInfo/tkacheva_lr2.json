@@ -175,6 +175,51 @@
         }
       }
     },
+    "/api/articles/unread/{username}": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/articles/{articleId}/mark-read": {
+      "post": {
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/auth/login": {
       "post": {
         "tags": [
@@ -251,17 +296,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RSSChannel"
+                "$ref": "#/components/schemas/CreateRSSChannelRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RSSChannel"
+                "$ref": "#/components/schemas/CreateRSSChannelRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RSSChannel"
+                "$ref": "#/components/schemas/CreateRSSChannelRequest"
               }
             }
           }
@@ -642,6 +687,13 @@
               "$ref": "#/components/schemas/RSSChannel"
             },
             "nullable": true
+          },
+          "articleStates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserArticleState"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -675,6 +727,13 @@
           },
           "rssChannel": {
             "$ref": "#/components/schemas/RSSChannel"
+          },
+          "userStates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserArticleState"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -732,6 +791,20 @@
         },
         "additionalProperties": false
       },
+      "CreateRSSChannelRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -777,6 +850,42 @@
             "items": {
               "$ref": "#/components/schemas/Article"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserArticleState": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "appUserId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "appUser": {
+            "$ref": "#/components/schemas/AppUser"
+          },
+          "articleId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "article": {
+            "$ref": "#/components/schemas/Article"
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "addedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "readAt": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },

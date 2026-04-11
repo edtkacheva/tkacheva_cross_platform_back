@@ -35,19 +35,29 @@ namespace tkacheva_lr2.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Create([FromBody] RSSChannel channel)
+        public async Task<ActionResult> Create([FromBody] CreateRSSChannelRequest request)
         {
-            var createdChannel = await _channelService.CreateChannelAsync(channel);
-
-            // Автоподписка
             var username = User.Identity?.Name;
-
             if (username == null)
                 return Unauthorized("Cannot determine current user.");
 
-            await _channelService.SubscribeUserAsync(username!, createdChannel.Name);
+            try
+            {
+                var createdChannel = await _channelService.CreateChannelWithArticlesAsync(
+                    request.Name,
+                    request.Url,
+                    username);
 
-            return CreatedAtAction(nameof(GetByName), new { name = createdChannel.Name }, createdChannel);
+                return CreatedAtAction(nameof(GetByName), new { name = createdChannel.Name }, createdChannel);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
 
         [HttpPut("{name}")]
