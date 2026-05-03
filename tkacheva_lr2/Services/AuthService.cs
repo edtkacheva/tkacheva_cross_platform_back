@@ -31,6 +31,7 @@ namespace tkacheva_lr2.Services
 
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Role, user.IsAdmin() ? "Admin" : "User"),
                 new Claim("IsAdmin", user.IsAdmin().ToString())

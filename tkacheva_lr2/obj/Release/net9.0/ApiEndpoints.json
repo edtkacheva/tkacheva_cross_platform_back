@@ -37,6 +37,38 @@
   },
   {
     "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
+    "Method": "AddToFavorites",
+    "RelativePath": "api/articles/{articleId}/favorite",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "articleId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
+    "Method": "RemoveFromFavorites",
+    "RelativePath": "api/articles/{articleId}/favorite",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "articleId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
     "Method": "MarkAsRead",
     "RelativePath": "api/articles/{articleId}/mark-read",
     "HttpMethod": "POST",
@@ -102,6 +134,42 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
+    "Method": "GetFavoritesForUser",
+    "RelativePath": "api/articles/favorites/{username}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "username",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
+    "Method": "GetMyArticles",
+    "RelativePath": "api/articles/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
+    "Method": "GetMyFavorites",
+    "RelativePath": "api/articles/me/favorites",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -190,6 +258,22 @@
   },
   {
     "ContainingType": "tkacheva_lr2.Controllers.RSSChannelsController",
+    "Method": "Delete",
+    "RelativePath": "api/rss/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.RSSChannelsController",
     "Method": "GetByName",
     "RelativePath": "api/rss/{name}",
     "HttpMethod": "GET",
@@ -237,18 +321,12 @@
   },
   {
     "ContainingType": "tkacheva_lr2.Controllers.RSSChannelsController",
-    "Method": "Delete",
-    "RelativePath": "api/rss/{name}",
-    "HttpMethod": "DELETE",
+    "Method": "Refresh",
+    "RelativePath": "api/rss/refresh",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "name",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -353,7 +431,7 @@
   {
     "ContainingType": "tkacheva_lr2.Controllers.UsersController",
     "Method": "Subscribe",
-    "RelativePath": "api/users/{username}/subscribe/{channelName}",
+    "RelativePath": "api/users/{username}/subscribe/{channelId}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -364,8 +442,8 @@
         "IsRequired": true
       },
       {
-        "Name": "channelName",
-        "Type": "System.String",
+        "Name": "channelId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -390,7 +468,7 @@
   {
     "ContainingType": "tkacheva_lr2.Controllers.UsersController",
     "Method": "Unsubscribe",
-    "RelativePath": "api/users/{username}/unsubscribe/{channelName}",
+    "RelativePath": "api/users/{username}/unsubscribe/{channelId}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -401,8 +479,50 @@
         "IsRequired": true
       },
       {
-        "Name": "channelName",
-        "Type": "System.String",
+        "Name": "channelId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.UsersController",
+    "Method": "SubscribeCurrentUser",
+    "RelativePath": "api/users/me/subscribe/{channelId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "channelId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.UsersController",
+    "Method": "GetMySubscriptions",
+    "RelativePath": "api/users/me/subscriptions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.UsersController",
+    "Method": "UnsubscribeCurrentUser",
+    "RelativePath": "api/users/me/unsubscribe/{channelId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "channelId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

@@ -78,13 +78,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAngular");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Маршруты контроллеров
 app.MapControllers();
 
-// Настройка CORS
-app.UseCors("AllowAngular");
+app.Run();
 
 app.Run();

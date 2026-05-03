@@ -1,4 +1,6 @@
-﻿namespace tkacheva_lr2.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace tkacheva_lr2.Models
 {
     public class Article
     {
@@ -11,6 +13,12 @@
         public int RSSChannelId { get; set; }
         public RSSChannel? RSSChannel { get; set; }
         public List<UserArticleState> UserStates { get; set; } = new();
+
+        [NotMapped]
+        public bool IsRead { get; set; }
+
+        [NotMapped]
+        public bool IsFavorite { get; set; }
 
         public bool IsValidUrl()
         {

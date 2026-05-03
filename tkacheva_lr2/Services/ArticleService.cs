@@ -17,6 +17,7 @@ namespace tkacheva_lr2.Services
         {
             return await _context.Articles
                 .Include(a => a.RSSChannel)
+                .OrderByDescending(a => a.PublishedAt)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -102,13 +103,119 @@ namespace tkacheva_lr2.Services
 
         public async Task<List<Article>> GetUnreadArticlesForUserAsync(string username)
         {
-            return await _context.UserArticleStates
-                .Where(x => x.AppUser!.UserName.ToLower() == username.ToLower() && !x.IsRead)
-                .Include(x => x.Article)
+            var user = await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
+
+            if (user == null)
+                return new List<Article>();
+
+            var subscribedChannelIds = user.SubscribedChannels
+                .Select(c => c.Id)
+                .ToList();
+
+            var states = await _context.UserArticleStates
+                .Where(s =>
+                    s.AppUserId == user.Id &&
+                    !s.IsRead &&
+                    s.Article != null &&
+                    subscribedChannelIds.Contains(s.Article.RSSChannelId))
+                .Include(s => s.Article)
                     .ThenInclude(a => a!.RSSChannel)
-                .OrderByDescending(x => x.AddedAt)
-                .Select(x => x.Article!)
+                .OrderByDescending(s => s.Article!.PublishedAt)
+                .AsNoTracking()
                 .ToListAsync();
+
+            return states
+                .Where(s => s.Article != null)
+                .Select(s =>
+                {
+                    var article = s.Article!;
+                    article.IsRead = s.IsRead;
+                    article.IsFavorite = s.IsFavorite;
+                    return article;
+                })
+                .ToList();
+        }
+
+        public async Task<List<Article>> GetArticlesForUserAsync(int userId)
+        {
+            var user = await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return new List<Article>();
+
+            var subscribedChannelIds = user.SubscribedChannels
+                .Select(c => c.Id)
+                .ToList();
+
+            var states = await _context.UserArticleStates
+                .Where(s =>
+                    s.AppUserId == user.Id &&
+                    s.Article != null &&
+                    subscribedChannelIds.Contains(s.Article.RSSChannelId))
+                .Include(s => s.Article)
+                    .ThenInclude(a => a!.RSSChannel)
+                .OrderByDescending(s => s.Article!.PublishedAt)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return states
+                .Where(s => s.Article != null)
+                .Select(s =>
+                {
+                    var article = s.Article!;
+                    article.IsRead = s.IsRead;
+                    article.IsFavorite = s.IsFavorite;
+                    return article;
+                })
+                .ToList();
+        }
+
+        public async Task<bool> SetFavoriteAsync(int userId, int articleId, bool isFavorite)
+        {
+            var userExists = await _context.AppUsers
+                .AnyAsync(u => u.Id == userId);
+
+            if (!userExists)
+                return false;
+
+            var articleExists = await _context.Articles
+                .AnyAsync(a => a.Id == articleId);
+
+            if (!articleExists)
+                return false;
+
+            var state = await _context.UserArticleStates
+                .FirstOrDefaultAsync(s =>
+                    s.AppUserId == userId &&
+                    s.ArticleId == articleId);
+
+            if (state == null)
+            {
+                if (!isFavorite)
+                    return true;
+
+                state = new UserArticleState
+                {
+                    AppUserId = userId,
+                    ArticleId = articleId,
+                    IsRead = false,
+                    IsFavorite = true,
+                    AddedAt = DateTime.UtcNow
+                };
+
+                _context.UserArticleStates.Add(state);
+            }
+            else
+            {
+                state.IsFavorite = isFavorite;
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
         }
 
         //public async Task<bool> MarkAsReadAsync(string username, int articleId)
@@ -127,6 +234,104 @@ namespace tkacheva_lr2.Services
         //    await _context.SaveChangesAsync();
         //    return true;
         //}
+
+        public async Task<List<Article>> GetFavoriteArticlesForUserAsync(string username)
+        {
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
+
+            if (user == null)
+                return new List<Article>();
+
+            var states = await _context.UserArticleStates
+                .Where(s => s.AppUserId == user.Id && s.IsFavorite)
+                .Include(s => s.Article)
+                    .ThenInclude(a => a!.RSSChannel)
+                .OrderByDescending(s => s.Article!.PublishedAt)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return states
+                .Where(s => s.Article != null)
+                .Select(s =>
+                {
+                    var article = s.Article!;
+                    article.IsRead = s.IsRead;
+                    article.IsFavorite = s.IsFavorite;
+                    return article;
+                })
+                .ToList();
+        }
+
+        public async Task<List<Article>> GetFavoriteArticlesForUserAsync(int userId)
+        {
+            var userExists = await _context.AppUsers
+                .AnyAsync(u => u.Id == userId);
+
+            if (!userExists)
+                return new List<Article>();
+
+            var states = await _context.UserArticleStates
+                .Where(s => s.AppUserId == userId && s.IsFavorite)
+                .Include(s => s.Article)
+                    .ThenInclude(a => a!.RSSChannel)
+                .OrderByDescending(s => s.Article!.PublishedAt)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return states
+                .Where(s => s.Article != null)
+                .Select(s =>
+                {
+                    var article = s.Article!;
+                    article.IsRead = s.IsRead;
+                    article.IsFavorite = s.IsFavorite;
+                    return article;
+                })
+                .ToList();
+        }
+
+        public async Task<bool> SetFavoriteAsync(string username, int articleId, bool isFavorite)
+        {
+            var user = await _context.AppUsers
+                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
+
+            if (user == null)
+                return false;
+
+            var article = await _context.Articles
+                .FirstOrDefaultAsync(a => a.Id == articleId);
+
+            if (article == null)
+                return false;
+
+            var state = await _context.UserArticleStates
+                .FirstOrDefaultAsync(s => s.AppUserId == user.Id && s.ArticleId == articleId);
+
+            if (state == null)
+            {
+                if (!isFavorite)
+                    return true;
+
+                state = new UserArticleState
+                {
+                    AppUserId = user.Id,
+                    ArticleId = articleId,
+                    IsRead = false,
+                    IsFavorite = true,
+                    AddedAt = DateTime.UtcNow
+                };
+
+                _context.UserArticleStates.Add(state);
+            }
+            else
+            {
+                state.IsFavorite = isFavorite;
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
 
         public async Task<bool> MarkAsReadAsync(string username, int articleId)
         {

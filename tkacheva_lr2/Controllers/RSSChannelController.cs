@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using tkacheva_lr2.Models;
 using tkacheva_lr2.Services;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace tkacheva_lr2.Controllers
 {
@@ -79,16 +81,54 @@ namespace tkacheva_lr2.Controllers
             }
         }
 
-        [HttpDelete("{name}")]
+        [HttpPost("refresh")]
         [Authorize]
-        public async Task<ActionResult> Delete(string name)
+        public async Task<IActionResult> Refresh()
+        {
+            try
+            {
+                int addedArticlesCount;
+
+                if (User.IsInRole("Admin"))
+                {
+                    addedArticlesCount = await _channelService.RefreshAllChannelsAsync();
+                }
+                else
+                {
+                    var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                    if (!int.TryParse(userIdString, out var userId))
+                        return Unauthorized("Cannot determine current user id.");
+
+                    addedArticlesCount = await _channelService.RefreshChannelsForUserAsync(userId);
+                }
+
+                return Ok(new
+                {
+                    message = "RSS-каналы обновлены.",
+                    addedArticles = addedArticlesCount
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<ActionResult> Delete(int id)
         {
             if (!User.IsInRole("Admin"))
-                return Forbid("Only admin can delete channels.");
+                return Forbid();
 
-            var result = await _channelService.DeleteChannelAsync(name);
-            if (!result) return NotFound();
-            return Ok("Channel deleted");
+            var result = await _channelService.DeleteChannelAsync(id);
+
+            if (!result)
+                return NotFound(new { message = "Channel not found." });
+
+            return Ok(new { message = "Channel deleted." });
         }
     }
 }

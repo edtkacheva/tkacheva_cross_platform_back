@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using tkacheva_lr2.Models;
 using tkacheva_lr2.Services;
+using System.Security.Claims;
 
 namespace tkacheva_lr2.Controllers
 {
@@ -56,6 +57,16 @@ namespace tkacheva_lr2.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        private int? GetCurrentUserId()
+        {
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(userIdString, out var userId))
+                return null;
+
+            return userId;
         }
 
         [HttpPut("{title}")]
@@ -121,6 +132,82 @@ namespace tkacheva_lr2.Controllers
                 return NotFound("Статья не найдена у пользователя.");
 
             return Ok(new { message = "Статья отмечена как прочитанная." });
+        }
+
+        [HttpGet("favorites/{username}")]
+        [Authorize]
+        public async Task<IActionResult> GetFavoritesForUser(string username)
+        {
+            var requester = User.Identity?.Name;
+
+            if (requester == null)
+                return Unauthorized();
+
+            if (!User.IsInRole("Admin") && requester.ToLower() != username.ToLower())
+                return Forbid();
+
+            var result = await _articleService.GetFavoriteArticlesForUserAsync(username);
+            return Ok(result);
+        }
+
+        [HttpGet("me/favorites")]
+        [Authorize]
+        public async Task<IActionResult> GetMyFavorites()
+        {
+            var userId = GetCurrentUserId();
+
+            if (userId == null)
+                return Unauthorized("Cannot determine current user id.");
+
+            var result = await _articleService.GetFavoriteArticlesForUserAsync(userId.Value);
+            return Ok(result);
+        }
+
+        [HttpPost("{articleId}/favorite")]
+        [Authorize]
+        public async Task<IActionResult> AddToFavorites(int articleId)
+        {
+            var userId = GetCurrentUserId();
+
+            if (userId == null)
+                return Unauthorized("Cannot determine current user id.");
+
+            var ok = await _articleService.SetFavoriteAsync(userId.Value, articleId, true);
+
+            if (!ok)
+                return NotFound(new { message = "Статья или пользователь не найдены." });
+
+            return Ok(new { message = "Статья добавлена в избранное." });
+        }
+
+        [HttpDelete("{articleId}/favorite")]
+        [Authorize]
+        public async Task<IActionResult> RemoveFromFavorites(int articleId)
+        {
+            var userId = GetCurrentUserId();
+
+            if (userId == null)
+                return Unauthorized("Cannot determine current user id.");
+
+            var ok = await _articleService.SetFavoriteAsync(userId.Value, articleId, false);
+
+            if (!ok)
+                return NotFound(new { message = "Статья или пользователь не найдены." });
+
+            return Ok(new { message = "Статья удалена из избранного." });
+        }
+
+        [HttpGet("me")]
+        [Authorize]
+        public async Task<IActionResult> GetMyArticles()
+        {
+            var userId = GetCurrentUserId();
+
+            if (userId == null)
+                return Unauthorized("Cannot determine current user id.");
+
+            var result = await _articleService.GetArticlesForUserAsync(userId.Value);
+            return Ok(result);
         }
 
     }

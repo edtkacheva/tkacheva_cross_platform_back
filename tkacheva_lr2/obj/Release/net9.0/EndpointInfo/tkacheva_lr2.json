@@ -220,6 +220,96 @@
         }
       }
     },
+    "/api/articles/favorites/{username}": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/articles/me/favorites": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/articles/{articleId}/favorite": {
+      "post": {
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/articles/me": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/auth/login": {
       "post": {
         "tags": [
@@ -394,18 +484,33 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/rss/refresh": {
+      "post": {
+        "tags": [
+          "RSSChannels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/rss/{id}": {
       "delete": {
         "tags": [
           "RSSChannels"
         ],
         "parameters": [
           {
-            "name": "name",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -581,7 +686,7 @@
         }
       }
     },
-    "/api/users/{username}/subscribe/{channelName}": {
+    "/api/users/{username}/subscribe/{channelId}": {
       "post": {
         "tags": [
           "Users"
@@ -596,11 +701,12 @@
             }
           },
           {
-            "name": "channelName",
+            "name": "channelId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -611,7 +717,7 @@
         }
       }
     },
-    "/api/users/{username}/unsubscribe/{channelName}": {
+    "/api/users/{username}/unsubscribe/{channelId}": {
       "post": {
         "tags": [
           "Users"
@@ -626,11 +732,12 @@
             }
           },
           {
-            "name": "channelName",
+            "name": "channelId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -655,6 +762,64 @@
               "type": "string"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/users/me/subscribe/{channelId}": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/users/me/unsubscribe/{channelId}": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "channelId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/users/me/subscriptions": {
+      "get": {
+        "tags": [
+          "Users"
         ],
         "responses": {
           "200": {
@@ -734,6 +899,12 @@
               "$ref": "#/components/schemas/UserArticleState"
             },
             "nullable": true
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "isFavorite": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -887,6 +1058,9 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "isFavorite": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using tkacheva_lr2.Models;
 using tkacheva_lr2.Services;
+using System.Security.Claims;
 
 namespace tkacheva_lr2.Controllers
 {
@@ -98,22 +99,50 @@ namespace tkacheva_lr2.Controllers
             return Ok("User deleted");
         }
 
-        [HttpPost("{username}/subscribe/{channelName}")]
-        [Authorize]
-        public async Task<ActionResult> Subscribe(string username, string channelName)
+        private int? GetCurrentUserId()
         {
-            var ok = await _userService.SubscribeAsync(username, channelName);
-            if (!ok) return NotFound();
-            return Ok($"User {username} subscribed to {channelName}");
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (!int.TryParse(userIdString, out var userId))
+                return null;
+
+            return userId;
         }
 
-        [HttpPost("{username}/unsubscribe/{channelName}")]
+        [HttpPost("{username}/subscribe/{channelId}")]
         [Authorize]
-        public async Task<ActionResult> Unsubscribe(string username, string channelName)
+        public async Task<ActionResult> Subscribe(string username, int channelId)
         {
-            var ok = await _userService.UnsubscribeAsync(username, channelName);
-            if (!ok) return NotFound();
-            return Ok($"User {username} unsubscribed from {channelName}");
+            var requester = User.Identity?.Name;
+            if (requester == null)
+                return Unauthorized();
+
+            if (!User.IsInRole("Admin") && requester.ToLower() != username.ToLower())
+                return Forbid("You can only subscribe for yourself.");
+
+            var ok = await _userService.SubscribeAsync(username, channelId);
+            if (!ok)
+                return NotFound("Channel not found.");
+
+            return Ok($"User {username} subscribed to channel.");
+        }
+
+        [HttpPost("{username}/unsubscribe/{channelId}")]
+        [Authorize]
+        public async Task<ActionResult> Unsubscribe(string username, int channelId)
+        {
+            var requester = User.Identity?.Name;
+            if (requester == null)
+                return Unauthorized();
+
+            if (!User.IsInRole("Admin") && requester.ToLower() != username.ToLower())
+                return Forbid("You can only unsubscribe for yourself.");
+
+            var ok = await _userService.UnsubscribeAsync(username, channelId);
+            if (!ok)
+                return NotFound("Subscription not found.");
+
+            return Ok($"User {username} unsubscribed from channel.");
         }
 
         [HttpGet("{username}/subscriptions")]
@@ -121,6 +150,53 @@ namespace tkacheva_lr2.Controllers
         public async Task<ActionResult> GetSubscriptions(string username)
         {
             var list = await _userService.GetSubscriptionsAsync(username);
+            return Ok(list);
+        }
+
+        [HttpPost("me/subscribe/{channelId}")]
+        [Authorize]
+        public async Task<ActionResult> SubscribeCurrentUser(int channelId)
+        {
+            var userId = GetCurrentUserId();
+
+            if (userId == null)
+                return Unauthorized("Cannot determine current user id.");
+
+            var ok = await _userService.SubscribeAsync(userId.Value, channelId);
+
+            if (!ok)
+                return NotFound("User or channel not found.");
+
+            return Ok(new { message = "Subscribed successfully." });
+        }
+
+        [HttpPost("me/unsubscribe/{channelId}")]
+        [Authorize]
+        public async Task<ActionResult> UnsubscribeCurrentUser(int channelId)
+        {
+            var userId = GetCurrentUserId();
+
+            if (userId == null)
+                return Unauthorized("Cannot determine current user id.");
+
+            var ok = await _userService.UnsubscribeAsync(userId.Value, channelId);
+
+            if (!ok)
+                return NotFound("Subscription not found.");
+
+            return Ok(new { message = "Unsubscribed successfully." });
+        }
+
+        [HttpGet("me/subscriptions")]
+        [Authorize]
+        public async Task<ActionResult> GetMySubscriptions()
+        {
+            var userId = GetCurrentUserId();
+
+            if (userId == null)
+                return Unauthorized("Cannot determine current user id.");
+
+            var list = await _userService.GetSubscriptionsAsync(userId.Value);
             return Ok(list);
         }
 

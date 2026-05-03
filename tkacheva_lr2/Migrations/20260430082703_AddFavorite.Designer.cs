@@ -11,8 +11,8 @@ using tkacheva_lr2.Data;
 namespace tkacheva_lr2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251120080609_AddDescriptionToArticles")]
-    partial class AddDescriptionToArticles
+    [Migration("20260430082703_AddFavorite")]
+    partial class AddFavorite
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,14 +57,8 @@ namespace tkacheva_lr2.Migrations
                         new
                         {
                             Id = 1,
-                            Password = "admin",
+                            Password = "longpasswordforadmin",
                             UserName = "admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Password = "1234",
-                            UserName = "user"
                         });
                 });
 
@@ -96,24 +90,6 @@ namespace tkacheva_lr2.Migrations
                     b.HasIndex("RSSChannelId");
 
                     b.ToTable("Articles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            PublishedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RSSChannelId = 1,
-                            Title = "Quantum mechanics",
-                            Url = "https://example.com/qm"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            PublishedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RSSChannelId = 2,
-                            Title = "Organic chemistry",
-                            Url = "https://example.com/organic"
-                        });
                 });
 
             modelBuilder.Entity("tkacheva_lr2.Models.RSSChannel", b =>
@@ -135,23 +111,44 @@ namespace tkacheva_lr2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RSSChannels");
+                    b.HasIndex("Url")
+                        .IsUnique();
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Physics articles",
-                            Name = "Physics",
-                            Url = ""
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Articles on chemistry",
-                            Name = "Chemistry",
-                            Url = ""
-                        });
+                    b.ToTable("RSSChannels");
+                });
+
+            modelBuilder.Entity("tkacheva_lr2.Models.UserArticleState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ReadAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.HasIndex("AppUserId", "ArticleId")
+                        .IsUnique();
+
+                    b.ToTable("UserArticleStates");
                 });
 
             modelBuilder.Entity("AppUserRSSChannel", b =>
@@ -178,6 +175,35 @@ namespace tkacheva_lr2.Migrations
                         .IsRequired();
 
                     b.Navigation("RSSChannel");
+                });
+
+            modelBuilder.Entity("tkacheva_lr2.Models.UserArticleState", b =>
+                {
+                    b.HasOne("tkacheva_lr2.Models.AppUser", "AppUser")
+                        .WithMany("ArticleStates")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("tkacheva_lr2.Models.Article", "Article")
+                        .WithMany("UserStates")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Article");
+                });
+
+            modelBuilder.Entity("tkacheva_lr2.Models.AppUser", b =>
+                {
+                    b.Navigation("ArticleStates");
+                });
+
+            modelBuilder.Entity("tkacheva_lr2.Models.Article", b =>
+                {
+                    b.Navigation("UserStates");
                 });
 
             modelBuilder.Entity("tkacheva_lr2.Models.RSSChannel", b =>

@@ -62,7 +62,7 @@ public class RSSFeedService
             var articles = feed.Items.Select(item => new FeedArticleDto
             {
                 Title = item.Title?.Text ?? "Без названия",
-                Url = item.Links.FirstOrDefault()?.Uri?.ToString() ?? "",
+                Url = GetArticleUrl(item),
                 Description = item.Summary?.Text,
                 PublishedAt = item.PublishDate != DateTimeOffset.MinValue
                     ? item.PublishDate.UtcDateTime
@@ -95,5 +95,86 @@ public class RSSFeedService
                 ErrorMessage = $"Ошибка при чтении RSS: {ex.Message}"
             };
         }
+    }
+
+    private static string GetArticleUrl(SyndicationItem item)
+    {
+        var articleLink = item.Links.FirstOrDefault(link =>
+            link.Uri != null &&
+            IsArticleLink(link));
+
+        if (articleLink?.Uri != null)
+            return articleLink.Uri.ToString();
+
+        articleLink = item.Links.FirstOrDefault(link =>
+            link.Uri != null &&
+            !IsEnclosureLink(link) &&
+            !IsImageLink(link));
+
+        if (articleLink?.Uri != null)
+            return articleLink.Uri.ToString();
+
+        if (!string.IsNullOrWhiteSpace(item.Id) &&
+            Uri.IsWellFormedUriString(item.Id, UriKind.Absolute) &&
+            !IsImageUrl(item.Id))
+        {
+            return item.Id;
+        }
+
+        return "";
+    }
+
+    private static bool IsArticleLink(SyndicationLink link)
+    {
+        if (link.Uri == null)
+            return false;
+
+        if (IsImageLink(link))
+            return false;
+
+        if (IsEnclosureLink(link))
+            return false;
+
+        return string.Equals(
+            link.RelationshipType,
+            "alternate",
+            StringComparison.OrdinalIgnoreCase
+        )
+        || string.IsNullOrWhiteSpace(link.RelationshipType);
+    }
+
+    private static bool IsEnclosureLink(SyndicationLink link)
+    {
+        return string.Equals(
+            link.RelationshipType,
+            "enclosure",
+            StringComparison.OrdinalIgnoreCase
+        );
+    }
+
+    private static bool IsImageLink(SyndicationLink link)
+    {
+        if (!string.IsNullOrWhiteSpace(link.MediaType) &&
+            link.MediaType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return link.Uri != null && IsImageUrl(link.Uri.ToString());
+    }
+
+    private static bool IsImageUrl(string url)
+    {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+            return false;
+
+        var path = uri.AbsolutePath.ToLowerInvariant();
+
+        return path.EndsWith(".jpg")
+            || path.EndsWith(".jpeg")
+            || path.EndsWith(".png")
+            || path.EndsWith(".gif")
+            || path.EndsWith(".webp")
+            || path.EndsWith(".svg");
     }
 }

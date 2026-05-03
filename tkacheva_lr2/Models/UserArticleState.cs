@@ -15,5 +15,6 @@ namespace tkacheva_lr2.Models
         public bool IsRead { get; set; } = false;
         public DateTime AddedAt { get; set; } = DateTime.UtcNow;
         public DateTime? ReadAt { get; set; }
+        public bool IsFavorite { get; set; } = false;
     }
 }

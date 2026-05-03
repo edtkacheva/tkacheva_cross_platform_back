@@ -35,31 +35,13 @@ namespace tkacheva_lr2.Data
                 new AppUser { Id = 1, UserName = "admin", Password = "longpasswordforadmin" }
             );
 
-            // RSS Channels
-            modelBuilder.Entity<RSSChannel>().HasData(
-                new RSSChannel { Id = 1, Name = "Physics", Description = "Physics articles" },
-                new RSSChannel { Id = 2, Name = "Chemistry", Description = "Articles on chemistry" }
-            );
 
-            // Articles
-            modelBuilder.Entity<Article>().HasData(
-                new Article
-                {
-                    Id = 1,
-                    Title = "Quantum mechanics",
-                    Url = "https://example.com/qm",
-                    PublishedAt = new DateTime(2024, 1, 1),
-                    RSSChannelId = 1
-                },
-                new Article
-                {
-                    Id = 2,
-                    Title = "Organic chemistry",
-                    Url = "https://example.com/organic",
-                    PublishedAt = new DateTime(2025, 1, 1),
-                    RSSChannelId = 2
-                }
-            );
+
+            modelBuilder.Entity<RSSChannel>()
+                .HasIndex(c => c.Url)
+                .IsUnique();
+
+            
 
             modelBuilder.Entity<Article>()
               .HasOne(a => a.RSSChannel)

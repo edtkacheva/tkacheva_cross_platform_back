@@ -87,24 +87,6 @@ namespace tkacheva_lr2.Migrations
                     b.HasIndex("RSSChannelId");
 
                     b.ToTable("Articles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            PublishedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RSSChannelId = 1,
-                            Title = "Quantum mechanics",
-                            Url = "https://example.com/qm"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            PublishedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RSSChannelId = 2,
-                            Title = "Organic chemistry",
-                            Url = "https://example.com/organic"
-                        });
                 });
 
             modelBuilder.Entity("tkacheva_lr2.Models.RSSChannel", b =>
@@ -126,23 +108,10 @@ namespace tkacheva_lr2.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RSSChannels");
+                    b.HasIndex("Url")
+                        .IsUnique();
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Physics articles",
-                            Name = "Physics",
-                            Url = ""
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Articles on chemistry",
-                            Name = "Chemistry",
-                            Url = ""
-                        });
+                    b.ToTable("RSSChannels");
                 });
 
             modelBuilder.Entity("tkacheva_lr2.Models.UserArticleState", b =>
@@ -158,6 +127,9 @@ namespace tkacheva_lr2.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("ArticleId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsFavorite")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsRead")

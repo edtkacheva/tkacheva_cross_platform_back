@@ -7,10 +7,12 @@ namespace tkacheva_lr2.Services
     public class UserService
     {
         private readonly ApplicationDbContext _context;
+        private readonly RSSFeedService _rssFeedService;
 
-        public UserService(ApplicationDbContext context)
+        public UserService(ApplicationDbContext context, RSSFeedService rssFeedService)
         {
             _context = context;
+            _rssFeedService = rssFeedService;
         }
 
         public async Task<List<AppUser>> GetAllUsersAsync()
@@ -86,7 +88,87 @@ namespace tkacheva_lr2.Services
                 u.UserName.ToLower() == username.ToLower());
         }
 
-        public async Task<bool> SubscribeAsync(string username, string channelName)
+        public async Task<bool> SubscribeAsync(int userId, int channelId)
+        {
+            var user = await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return false;
+
+            var channel = await _context.RSSChannels
+                .FirstOrDefaultAsync(c => c.Id == channelId);
+
+            if (channel == null)
+                return false;
+
+            if (!user.SubscribedChannels.Any(c => c.Id == channelId))
+            {
+                user.SubscribedChannels.Add(channel);
+            }
+
+            var articlesInChannel = await _context.Articles
+                .Where(a => a.RSSChannelId == channelId)
+                .ToListAsync();
+
+            foreach (var article in articlesInChannel)
+            {
+                var exists = await _context.UserArticleStates
+                    .AnyAsync(s => s.AppUserId == user.Id && s.ArticleId == article.Id);
+
+                if (!exists)
+                {
+                    _context.UserArticleStates.Add(new UserArticleState
+                    {
+                        AppUserId = user.Id,
+                        ArticleId = article.Id,
+                        IsRead = false,
+                        AddedAt = DateTime.UtcNow
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UnsubscribeAsync(int userId, int channelId)
+        {
+            var user = await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return false;
+
+            var subscription = user.SubscribedChannels
+                .FirstOrDefault(s => s.Id == channelId);
+
+            if (subscription == null)
+                return false;
+
+            user.SubscribedChannels.Remove(subscription);
+
+            var articleIds = await _context.Articles
+                .Where(a => a.RSSChannelId == channelId)
+                .Select(a => a.Id)
+                .ToListAsync();
+
+            var statesToRemove = await _context.UserArticleStates
+                .Where(s =>
+                    s.AppUserId == user.Id &&
+                    articleIds.Contains(s.ArticleId) &&
+                    !s.IsFavorite)
+                .ToListAsync();
+
+            _context.UserArticleStates.RemoveRange(statesToRemove);
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> SubscribeAsync(string username, int channelId)
         {
             var user = await _context.AppUsers
                 .Include(u => u.SubscribedChannels)
@@ -96,21 +178,43 @@ namespace tkacheva_lr2.Services
                 return false;
 
             var channel = await _context.RSSChannels
-                .FirstOrDefaultAsync(c => c.Name.ToLower() == channelName.ToLower());
+                .FirstOrDefaultAsync(c => c.Id == channelId);
 
             if (channel == null)
                 return false;
 
-            if (!user.SubscribedChannels.Contains(channel))
+            if (!user.SubscribedChannels.Any(c => c.Id == channelId))
             {
                 user.SubscribedChannels.Add(channel);
-                await _context.SaveChangesAsync();
             }
+
+            var articlesInChannel = await _context.Articles
+                .Where(a => a.RSSChannelId == channelId)
+                .ToListAsync();
+
+            foreach (var article in articlesInChannel)
+            {
+                var exists = await _context.UserArticleStates
+                    .AnyAsync(s => s.AppUserId == user.Id && s.ArticleId == article.Id);
+
+                if (!exists)
+                {
+                    _context.UserArticleStates.Add(new UserArticleState
+                    {
+                        AppUserId = user.Id,
+                        ArticleId = article.Id,
+                        IsRead = false,
+                        AddedAt = DateTime.UtcNow
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<bool> UnsubscribeAsync(string username, string channelName)
+        public async Task<bool> UnsubscribeAsync(string username, int channelId)
         {
             var user = await _context.AppUsers
                 .Include(u => u.SubscribedChannels)
@@ -119,13 +223,28 @@ namespace tkacheva_lr2.Services
             if (user == null)
                 return false;
 
-            var channel = user.SubscribedChannels
-                .FirstOrDefault(c => c.Name.ToLower() == channelName.ToLower());
+            var subscription = user.SubscribedChannels
+                .FirstOrDefault(s => s.Id == channelId);
 
-            if (channel == null)
+            if (subscription == null)
                 return false;
 
-            user.SubscribedChannels.Remove(channel);
+            user.SubscribedChannels.Remove(subscription);
+
+            var articleIds = await _context.Articles
+                .Where(a => a.RSSChannelId == channelId)
+                .Select(a => a.Id)
+                .ToListAsync();
+
+            var statesToRemove = await _context.UserArticleStates
+                .Where(s =>
+                    s.AppUserId == user.Id &&
+                    articleIds.Contains(s.ArticleId) &&
+                    !s.IsFavorite)
+                .ToListAsync();
+
+            _context.UserArticleStates.RemoveRange(statesToRemove);
+
             await _context.SaveChangesAsync();
 
             return true;
@@ -140,5 +259,31 @@ namespace tkacheva_lr2.Services
             return user?.SubscribedChannels ?? new List<RSSChannel>();
         }
 
+        private static string NormalizeUrlString(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return url;
+
+            url = url.Trim().ToLowerInvariant();
+            return url.TrimEnd('/');
+        }
+
+        public async Task<List<RSSChannel>> GetSubscriptionsAsync(int userId)
+        {
+            var user = await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            return user?.SubscribedChannels ?? new List<RSSChannel>();
+        }
+
+        private string NormalizeUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return url;
+
+            url = url.Trim().ToLowerInvariant();
+            return url.TrimEnd('/');
+        }
     }
 }
