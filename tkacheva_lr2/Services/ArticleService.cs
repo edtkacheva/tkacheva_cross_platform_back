@@ -138,8 +138,14 @@ namespace tkacheva_lr2.Services
                 .ToList();
         }
 
-        public async Task<List<Article>> GetArticlesForUserAsync(int userId)
+        public async Task<List<Article>> GetArticlesForUserAsync(int userId, int page, int pageSize)
         {
+            if (page < 1)
+                page = 1;
+
+            if (pageSize < 1)
+                pageSize = 10;
+
             var user = await _context.AppUsers
                 .Include(u => u.SubscribedChannels)
                 .FirstOrDefaultAsync(u => u.Id == userId);
@@ -159,6 +165,8 @@ namespace tkacheva_lr2.Services
                 .Include(s => s.Article)
                     .ThenInclude(a => a!.RSSChannel)
                 .OrderByDescending(s => s.Article!.PublishedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -172,6 +180,84 @@ namespace tkacheva_lr2.Services
                     return article;
                 })
                 .ToList();
+        }
+
+        public async Task<List<Article>> GetArticlesForUserAsync(
+            int userId,
+            bool isRead,
+            int page,
+            int pageSize,
+            DateTime? readBefore = null)
+        {
+            if (page < 1)
+                page = 1;
+
+            if (pageSize < 1)
+                pageSize = 10;
+
+            var user = await _context.AppUsers
+                .Include(u => u.SubscribedChannels)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return new List<Article>();
+
+            var subscribedChannelIds = user.SubscribedChannels
+                .Select(c => c.Id)
+                .ToList();
+
+            var query = _context.UserArticleStates
+                .Where(s =>
+                    s.AppUserId == userId &&
+                    s.IsRead == isRead &&
+                    s.Article != null &&
+                    subscribedChannelIds.Contains(s.Article.RSSChannelId));
+
+            if (isRead && readBefore != null)
+            {
+                query = query.Where(s =>
+                    s.ReadAt == null || s.ReadAt < readBefore.Value);
+            }
+
+            var states = await query
+                .Include(s => s.Article)
+                    .ThenInclude(a => a!.RSSChannel)
+                .OrderByDescending(s => s.Article!.PublishedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return states
+                .Where(s => s.Article != null)
+                .Select(s =>
+                {
+                    var article = s.Article!;
+                    article.IsRead = s.IsRead;
+                    article.IsFavorite = s.IsFavorite;
+                    return article;
+                })
+                .ToList();
+        }
+
+        public async Task<bool> MarkAsReadAsync(int userId, int articleId)
+        {
+            var state = await _context.UserArticleStates
+                .FirstOrDefaultAsync(s =>
+                    s.AppUserId == userId &&
+                    s.ArticleId == articleId);
+
+            if (state == null)
+                return false;
+
+            if (!state.IsRead)
+            {
+                state.IsRead = true;
+                state.ReadAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+
+            return true;
         }
 
         public async Task<bool> SetFavoriteAsync(int userId, int articleId, bool isFavorite)

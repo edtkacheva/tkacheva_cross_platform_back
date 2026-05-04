@@ -123,13 +123,15 @@ namespace tkacheva_lr2.Controllers
         [Authorize]
         public async Task<IActionResult> MarkAsRead(int articleId)
         {
-            var username = User.Identity?.Name;
-            if (username == null)
-                return Unauthorized();
+            var userId = GetCurrentUserId();
 
-            var ok = await _articleService.MarkAsReadAsync(username, articleId);
+            if (userId == null)
+                return Unauthorized("Cannot determine current user id.");
+
+            var ok = await _articleService.MarkAsReadAsync(userId.Value, articleId);
+
             if (!ok)
-                return NotFound("Статья не найдена у пользователя.");
+                return NotFound(new { message = "Статья не найдена у пользователя." });
 
             return Ok(new { message = "Статья отмечена как прочитанная." });
         }
@@ -199,18 +201,30 @@ namespace tkacheva_lr2.Controllers
 
         [HttpGet("me")]
         [Authorize]
-        public async Task<IActionResult> GetMyArticles()
+        public async Task<IActionResult> GetMyArticles(
+            [FromQuery] bool isRead,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] DateTime? readBefore = null)
         {
             var userId = GetCurrentUserId();
 
             if (userId == null)
                 return Unauthorized("Cannot determine current user id.");
 
-            var result = await _articleService.GetArticlesForUserAsync(userId.Value);
+            var result = await _articleService.GetArticlesForUserAsync(
+                userId.Value,
+                isRead,
+                page,
+                pageSize,
+                readBefore);
+
             return Ok(result);
         }
 
     }
+
+
 
     public class ArticleCreateRequest
     {
