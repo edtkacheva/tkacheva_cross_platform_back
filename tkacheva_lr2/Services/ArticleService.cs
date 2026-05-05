@@ -138,50 +138,6 @@ namespace tkacheva_lr2.Services
                 .ToList();
         }
 
-        public async Task<List<Article>> GetArticlesForUserAsync(int userId, int page, int pageSize)
-        {
-            if (page < 1)
-                page = 1;
-
-            if (pageSize < 1)
-                pageSize = 10;
-
-            var user = await _context.AppUsers
-                .Include(u => u.SubscribedChannels)
-                .FirstOrDefaultAsync(u => u.Id == userId);
-
-            if (user == null)
-                return new List<Article>();
-
-            var subscribedChannelIds = user.SubscribedChannels
-                .Select(c => c.Id)
-                .ToList();
-
-            var states = await _context.UserArticleStates
-                .Where(s =>
-                    s.AppUserId == user.Id &&
-                    s.Article != null &&
-                    subscribedChannelIds.Contains(s.Article.RSSChannelId))
-                .Include(s => s.Article)
-                    .ThenInclude(a => a!.RSSChannel)
-                .OrderByDescending(s => s.Article!.PublishedAt)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .AsNoTracking()
-                .ToListAsync();
-
-            return states
-                .Where(s => s.Article != null)
-                .Select(s =>
-                {
-                    var article = s.Article!;
-                    article.IsRead = s.IsRead;
-                    article.IsFavorite = s.IsFavorite;
-                    return article;
-                })
-                .ToList();
-        }
-
         public async Task<List<Article>> GetArticlesForUserAsync(
             int userId,
             bool isRead,
@@ -342,22 +298,6 @@ namespace tkacheva_lr2.Services
             return true;
         }
 
-        //public async Task<bool> MarkAsReadAsync(string username, int articleId)
-        //{
-        //    var state = await _context.UserArticleStates
-        //        .Include(x => x.AppUser)
-        //        .FirstOrDefaultAsync(x =>
-        //            x.AppUser!.UserName.ToLower() == username.ToLower() &&
-        //            x.ArticleId == articleId);
-
-        //    if (state == null)
-        //        return false;
-
-        //    state.IsRead = true;
-        //    state.ReadAt = DateTime.UtcNow;
-        //    await _context.SaveChangesAsync();
-        //    return true;
-        //}
 
         public async Task<List<Article>> GetFavoriteArticlesForUserAsync(string username)
         {
@@ -413,87 +353,6 @@ namespace tkacheva_lr2.Services
                     return article;
                 })
                 .ToList();
-        }
-
-        public async Task<bool> SetFavoriteAsync(string username, int articleId, bool isFavorite)
-        {
-            var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
-
-            if (user == null)
-                return false;
-
-            var article = await _context.Articles
-                .FirstOrDefaultAsync(a => a.Id == articleId);
-
-            if (article == null)
-                return false;
-
-            var state = await _context.UserArticleStates
-                .FirstOrDefaultAsync(s => s.AppUserId == user.Id && s.ArticleId == articleId);
-
-            if (state == null)
-            {
-                if (!isFavorite)
-                    return true;
-
-                state = new UserArticleState
-                {
-                    AppUserId = user.Id,
-                    ArticleId = articleId,
-                    IsRead = false,
-                    IsFavorite = true,
-                    AddedAt = DateTime.UtcNow
-                };
-
-                _context.UserArticleStates.Add(state);
-            }
-            else
-            {
-                state.IsFavorite = isFavorite;
-            }
-
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> MarkAsReadAsync(string username, int articleId)
-        {
-            Console.WriteLine($"Получен запрос на пометку статьи с ID {articleId} для пользователя {username}");
-
-            var state = await _context.UserArticleStates
-                .Include(x => x.AppUser)
-                .FirstOrDefaultAsync(x => x.AppUser.UserName.ToLower() == username.ToLower() && x.ArticleId == articleId);
-
-            // Логирование, чтобы проверить, что мы нашли статью
-            if (state == null)
-            {
-                Console.WriteLine($"Статья с ID {articleId} не найдена для пользователя {username}");
-                return false;
-            }
-
-            // Если статья уже помечена как прочитанная
-            if (state.IsRead)
-            {
-                Console.WriteLine($"Статья с ID {articleId} уже прочитана.");
-                return true;
-            }
-
-            // Обновляем статус статьи
-            state.IsRead = true;
-            state.ReadAt = DateTime.UtcNow;
-
-            try
-            {
-                await _context.SaveChangesAsync(); // Сохраняем изменения в базе
-                Console.WriteLine($"Статья с ID {articleId} помечена как прочитанная для пользователя {username}");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка при пометке статьи с ID {articleId}: {ex.Message}");
-                return false;
-            }
         }
     }
 }

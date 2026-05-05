@@ -34,7 +34,6 @@ namespace tkacheva_lr2.Controllers
             if (requester == null)
                 return Unauthorized("Cannot determine current user.");
 
-            // Админ может смотреть всех
             if (!User.IsInRole("Admin") && requester.ToLower() != username.ToLower())
                 return Forbid("You can only view your own profile.");
 

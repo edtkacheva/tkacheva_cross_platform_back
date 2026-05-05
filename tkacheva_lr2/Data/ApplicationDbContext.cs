@@ -24,13 +24,11 @@ namespace tkacheva_lr2.Data
                 .WithMany(c => c.Subscribers)
                 .UsingEntity(j => j.ToTable("UserChannelSubscriptions"));
 
-            // Article → RSSChannel
             modelBuilder.Entity<Article>()
                 .HasOne(a => a.RSSChannel)
                 .WithMany(c => c.Articles)
                 .HasForeignKey(a => a.RSSChannelId);
 
-            // Users
             modelBuilder.Entity<AppUser>().HasData(
                 new AppUser { Id = 1, UserName = "admin", Password = "longpasswordforadmin" }
             );

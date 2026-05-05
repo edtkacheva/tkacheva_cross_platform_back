@@ -7,12 +7,10 @@ namespace tkacheva_lr2.Services
     public class UserService
     {
         private readonly ApplicationDbContext _context;
-        private readonly RSSFeedService _rssFeedService;
 
-        public UserService(ApplicationDbContext context, RSSFeedService rssFeedService)
+        public UserService(ApplicationDbContext context)
         {
             _context = context;
-            _rssFeedService = rssFeedService;
         }
 
         public async Task<List<AppUser>> GetAllUsersAsync()
@@ -259,15 +257,6 @@ namespace tkacheva_lr2.Services
             return user?.SubscribedChannels ?? new List<RSSChannel>();
         }
 
-        private static string NormalizeUrlString(string url)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-                return url;
-
-            url = url.Trim().ToLowerInvariant();
-            return url.TrimEnd('/');
-        }
-
         public async Task<List<RSSChannel>> GetSubscriptionsAsync(int userId)
         {
             var user = await _context.AppUsers
@@ -275,15 +264,6 @@ namespace tkacheva_lr2.Services
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             return user?.SubscribedChannels ?? new List<RSSChannel>();
-        }
-
-        private string NormalizeUrl(string url)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-                return url;
-
-            url = url.Trim().ToLowerInvariant();
-            return url.TrimEnd('/');
         }
     }
 }
