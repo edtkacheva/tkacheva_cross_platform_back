@@ -330,11 +330,33 @@
             }
           },
           {
-            "name": "readBefore",
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelIds",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
             "in": "query",
             "schema": {
               "type": "string",
-              "format": "date-time"
+              "default": "newest"
+            }
+          },
+          {
+            "name": "periodFilter",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "all"
             }
           }
         ],

@@ -205,19 +205,37 @@ namespace tkacheva_lr2.Controllers
             [FromQuery] bool isRead,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
-            [FromQuery] DateTime? readBefore = null)
+            [FromQuery] string? search = null,
+            [FromQuery] string? channelIds = null,
+            [FromQuery] string? sortOrder = "newest",
+            [FromQuery] string? periodFilter = "all")
         {
             var userId = GetCurrentUserId();
 
             if (userId == null)
                 return Unauthorized("Cannot determine current user id.");
 
+            var selectedChannelIds = new List<int>();
+
+            if (!string.IsNullOrWhiteSpace(channelIds))
+            {
+                selectedChannelIds = channelIds
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => int.TryParse(x, out var id) ? id : (int?)null)
+                    .Where(x => x.HasValue)
+                    .Select(x => x!.Value)
+                    .ToList();
+            }
+
             var result = await _articleService.GetArticlesForUserAsync(
                 userId.Value,
                 isRead,
                 page,
                 pageSize,
-                readBefore);
+                search,
+                selectedChannelIds,
+                sortOrder,
+                periodFilter);
 
             return Ok(result);
         }

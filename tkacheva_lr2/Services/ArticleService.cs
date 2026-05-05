@@ -187,7 +187,10 @@ namespace tkacheva_lr2.Services
             bool isRead,
             int page,
             int pageSize,
-            DateTime? readBefore = null)
+            string? search,
+            List<int>? channelIds,
+            string? sortOrder,
+            string? periodFilter)
         {
             if (page < 1)
                 page = 1;
@@ -211,18 +214,53 @@ namespace tkacheva_lr2.Services
                     s.AppUserId == userId &&
                     s.IsRead == isRead &&
                     s.Article != null &&
-                    subscribedChannelIds.Contains(s.Article.RSSChannelId));
-
-            if (isRead && readBefore != null)
-            {
-                query = query.Where(s =>
-                    s.ReadAt == null || s.ReadAt < readBefore.Value);
-            }
-
-            var states = await query
+                    subscribedChannelIds.Contains(s.Article.RSSChannelId))
                 .Include(s => s.Article)
                     .ThenInclude(a => a!.RSSChannel)
-                .OrderByDescending(s => s.Article!.PublishedAt)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var normalizedSearch = search.Trim().ToLower();
+
+                query = query.Where(s =>
+                    s.Article!.Title.ToLower().Contains(normalizedSearch) ||
+                    (s.Article.Description != null && s.Article.Description.ToLower().Contains(normalizedSearch)) ||
+                    s.Article.Url.ToLower().Contains(normalizedSearch) ||
+                    (s.Article.RSSChannel != null && s.Article.RSSChannel.Name.ToLower().Contains(normalizedSearch))
+                );
+            }
+
+            if (channelIds != null && channelIds.Count > 0)
+            {
+                query = query.Where(s =>
+                    channelIds.Contains(s.Article!.RSSChannelId)
+                );
+            }
+
+            var now = DateTime.UtcNow;
+
+            if (periodFilter == "lastMonth")
+            {
+                var monthAgo = now.AddMonths(-1);
+                query = query.Where(s => s.Article!.PublishedAt >= monthAgo);
+            }
+            else if (periodFilter == "lastYear")
+            {
+                var yearAgo = now.AddYears(-1);
+                query = query.Where(s => s.Article!.PublishedAt >= yearAgo);
+            }
+            else if (periodFilter == "previousYear")
+            {
+                var previousYear = now.Year - 1;
+                query = query.Where(s => s.Article!.PublishedAt.Year == previousYear);
+            }
+
+            query = sortOrder == "oldest"
+                ? query.OrderBy(s => s.Article!.PublishedAt)
+                : query.OrderByDescending(s => s.Article!.PublishedAt);
+
+            var states = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .AsNoTracking()
