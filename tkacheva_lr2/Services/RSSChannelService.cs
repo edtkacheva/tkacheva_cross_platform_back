@@ -19,8 +19,15 @@ namespace tkacheva_lr2.Services
         public async Task<List<RSSChannel>> GetAllChannelsAsync()
         {
             return await _context.RSSChannels
-                .Include(c => c.Articles)
                 .AsNoTracking()
+                .OrderBy(c => c.Name)
+                .Select(c => new RSSChannel
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Url = c.Url,
+                    Description = c.Description
+                })
                 .ToListAsync();
         }
 
@@ -102,32 +109,30 @@ namespace tkacheva_lr2.Services
             }
             await _context.SaveChangesAsync();
 
-            // Подписываем создателя на канал
-            if (!user.SubscribedChannels.Any(c => c.Id == channel.Id))
+            if (!user.IsAdmin())
             {
-                user.SubscribedChannels.Add(channel);
-            }
+                var now = DateTime.UtcNow;
 
-            // Создаём записи UserArticleState для создателя
-            var articlesInChannel = await _context.Articles
-                .Where(a => a.RSSChannelId == channel.Id)
-                .ToListAsync();
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+                    INSERT OR IGNORE INTO UserChannelSubscriptions
+                        (SubscribedChannelsId, SubscribersId)
+                    VALUES
+                        ({channel.Id}, {user.Id});
+                ");
 
-            foreach (var article in articlesInChannel)
-            {
-                var exists = await _context.UserArticleStates
-                    .AnyAsync(s => s.AppUserId == user.Id && s.ArticleId == article.Id);
-
-                if (!exists)
-                {
-                    _context.UserArticleStates.Add(new UserArticleState
-                    {
-                        AppUserId = user.Id,
-                        ArticleId = article.Id,
-                        IsRead = false,
-                        AddedAt = DateTime.UtcNow
-                    });
-                }
+                await _context.Database.ExecuteSqlInterpolatedAsync($@"
+                    INSERT OR IGNORE INTO UserArticleStates
+                        (AppUserId, ArticleId, IsRead, AddedAt, ReadAt, IsFavorite)
+                    SELECT
+                        {user.Id},
+                        a.Id,
+                        0,
+                        {now},
+                        NULL,
+                        0
+                    FROM Articles AS a
+                    WHERE a.RSSChannelId = {channel.Id};
+                ");
             }
 
             await _context.SaveChangesAsync();
@@ -280,26 +285,50 @@ namespace tkacheva_lr2.Services
             return addedArticlesCount;
         }
 
-        public async Task<RSSChannel?> UpdateChannelAsync(string name, RSSChannel updated)
+        public async Task<RSSChannel?> UpdateChannelAsync(int id, RSSChannel updated)
         {
             var channel = await _context.RSSChannels
-                .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
+                .FirstOrDefaultAsync(c => c.Id == id);
 
-            if (channel == null) return null;
+            if (channel == null)
+                return null;
 
-            if (!string.IsNullOrWhiteSpace(updated.Name) &&
-                !channel.Name.Equals(updated.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                if (await ChannelExistsAsync(updated.Name))
-                    throw new InvalidOperationException("New channel name already exists.");
+            var newName = updated.Name?.Trim() ?? "";
+            var newUrl = updated.Url?.Trim() ?? "";
 
-                channel.Name = updated.Name;
-            }
+            if (string.IsNullOrWhiteSpace(newName))
+                throw new ArgumentException("Название канала не может быть пустым.");
 
-            channel.Url = updated.Url;
+            if (string.IsNullOrWhiteSpace(newUrl))
+                throw new ArgumentException("RSS URL не может быть пустым.");
+
+            if (!Uri.TryCreate(newUrl, UriKind.Absolute, out _))
+                throw new ArgumentException("Некорректный RSS URL.");
+
+            var nameExists = await _context.RSSChannels
+                .AnyAsync(c =>
+                    c.Id != id &&
+                    c.Name.ToLower() == newName.ToLower());
+
+            if (nameExists)
+                throw new InvalidOperationException("Канал с таким названием уже существует.");
+
+            var normalizedNewUrl = NormalizeUrlString(newUrl);
+
+            var existingChannels = await _context.RSSChannels
+                .AsNoTracking()
+                .Where(c => c.Id != id)
+                .ToListAsync();
+
+            if (existingChannels.Any(c => NormalizeUrlString(c.Url) == normalizedNewUrl))
+                throw new InvalidOperationException("Этот RSS-источник уже добавлен.");
+
+            channel.Name = newName;
+            channel.Url = newUrl;
             channel.Description = updated.Description;
 
             await _context.SaveChangesAsync();
+
             return channel;
         }
 

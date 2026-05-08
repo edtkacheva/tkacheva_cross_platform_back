@@ -88,173 +88,77 @@ namespace tkacheva_lr2.Services
 
         public async Task<bool> SubscribeAsync(int userId, int channelId)
         {
-            var user = await _context.AppUsers
-                .Include(u => u.SubscribedChannels)
-                .FirstOrDefaultAsync(u => u.Id == userId);
+            var userExists = await _context.AppUsers
+                .AsNoTracking()
+                .AnyAsync(u => u.Id == userId);
 
-            if (user == null)
+            if (!userExists)
                 return false;
 
-            var channel = await _context.RSSChannels
-                .FirstOrDefaultAsync(c => c.Id == channelId);
+            var channelExists = await _context.RSSChannels
+                .AsNoTracking()
+                .AnyAsync(c => c.Id == channelId);
 
-            if (channel == null)
+            if (!channelExists)
                 return false;
 
-            if (!user.SubscribedChannels.Any(c => c.Id == channelId))
-            {
-                user.SubscribedChannels.Add(channel);
-            }
+            await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            var articlesInChannel = await _context.Articles
-                .Where(a => a.RSSChannelId == channelId)
-                .ToListAsync();
+            await _context.Database.ExecuteSqlInterpolatedAsync($@"
+                INSERT OR IGNORE INTO UserChannelSubscriptions 
+                    (SubscribedChannelsId, SubscribersId)
+                VALUES 
+                    ({channelId}, {userId});
+            ");
 
-            foreach (var article in articlesInChannel)
-            {
-                var exists = await _context.UserArticleStates
-                    .AnyAsync(s => s.AppUserId == user.Id && s.ArticleId == article.Id);
+            var now = DateTime.UtcNow;
 
-                if (!exists)
-                {
-                    _context.UserArticleStates.Add(new UserArticleState
-                    {
-                        AppUserId = user.Id,
-                        ArticleId = article.Id,
-                        IsRead = false,
-                        AddedAt = DateTime.UtcNow
-                    });
-                }
-            }
+            await _context.Database.ExecuteSqlInterpolatedAsync($@"
+                INSERT OR IGNORE INTO UserArticleStates
+                    (AppUserId, ArticleId, IsRead, AddedAt, ReadAt, IsFavorite)
+                SELECT 
+                    {userId}, 
+                    a.Id, 
+                    0, 
+                    {now}, 
+                    NULL, 
+                    0
+                FROM Articles AS a
+                WHERE a.RSSChannelId = {channelId};
+            ");
 
-            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
+
             return true;
         }
 
         public async Task<bool> UnsubscribeAsync(int userId, int channelId)
         {
-            var user = await _context.AppUsers
-                .Include(u => u.SubscribedChannels)
-                .FirstOrDefaultAsync(u => u.Id == userId);
+            await using var transaction = await _context.Database.BeginTransactionAsync();
 
-            if (user == null)
+            var deletedSubscriptions = await _context.Database.ExecuteSqlInterpolatedAsync($@"
+                DELETE FROM UserChannelSubscriptions
+                WHERE SubscribersId = {userId}
+                  AND SubscribedChannelsId = {channelId};
+            ");
+
+            if (deletedSubscriptions == 0)
                 return false;
 
-            var subscription = user.SubscribedChannels
-                .FirstOrDefault(s => s.Id == channelId);
+            await _context.Database.ExecuteSqlInterpolatedAsync($@"
+                DELETE FROM UserArticleStates
+                WHERE AppUserId = {userId}
+                  AND IsFavorite = 0
+                  AND ArticleId IN (
+                      SELECT Id
+                      FROM Articles
+                      WHERE RSSChannelId = {channelId}
+                  );
+            ");
 
-            if (subscription == null)
-                return false;
-
-            user.SubscribedChannels.Remove(subscription);
-
-            var articleIds = await _context.Articles
-                .Where(a => a.RSSChannelId == channelId)
-                .Select(a => a.Id)
-                .ToListAsync();
-
-            var statesToRemove = await _context.UserArticleStates
-                .Where(s =>
-                    s.AppUserId == user.Id &&
-                    articleIds.Contains(s.ArticleId) &&
-                    !s.IsFavorite)
-                .ToListAsync();
-
-            _context.UserArticleStates.RemoveRange(statesToRemove);
-
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> SubscribeAsync(string username, int channelId)
-        {
-            var user = await _context.AppUsers
-                .Include(u => u.SubscribedChannels)
-                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
-
-            if (user == null)
-                return false;
-
-            var channel = await _context.RSSChannels
-                .FirstOrDefaultAsync(c => c.Id == channelId);
-
-            if (channel == null)
-                return false;
-
-            if (!user.SubscribedChannels.Any(c => c.Id == channelId))
-            {
-                user.SubscribedChannels.Add(channel);
-            }
-
-            var articlesInChannel = await _context.Articles
-                .Where(a => a.RSSChannelId == channelId)
-                .ToListAsync();
-
-            foreach (var article in articlesInChannel)
-            {
-                var exists = await _context.UserArticleStates
-                    .AnyAsync(s => s.AppUserId == user.Id && s.ArticleId == article.Id);
-
-                if (!exists)
-                {
-                    _context.UserArticleStates.Add(new UserArticleState
-                    {
-                        AppUserId = user.Id,
-                        ArticleId = article.Id,
-                        IsRead = false,
-                        AddedAt = DateTime.UtcNow
-                    });
-                }
-            }
-
-            await _context.SaveChangesAsync();
+            await transaction.CommitAsync();
 
             return true;
-        }
-
-        public async Task<bool> UnsubscribeAsync(string username, int channelId)
-        {
-            var user = await _context.AppUsers
-                .Include(u => u.SubscribedChannels)
-                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
-
-            if (user == null)
-                return false;
-
-            var subscription = user.SubscribedChannels
-                .FirstOrDefault(s => s.Id == channelId);
-
-            if (subscription == null)
-                return false;
-
-            user.SubscribedChannels.Remove(subscription);
-
-            var articleIds = await _context.Articles
-                .Where(a => a.RSSChannelId == channelId)
-                .Select(a => a.Id)
-                .ToListAsync();
-
-            var statesToRemove = await _context.UserArticleStates
-                .Where(s =>
-                    s.AppUserId == user.Id &&
-                    articleIds.Contains(s.ArticleId) &&
-                    !s.IsFavorite)
-                .ToListAsync();
-
-            _context.UserArticleStates.RemoveRange(statesToRemove);
-
-            await _context.SaveChangesAsync();
-
-            return true;
-        }
-
-        public async Task<List<RSSChannel>> GetSubscriptionsAsync(string username)
-        {
-            var user = await _context.AppUsers
-                .Include(u => u.SubscribedChannels)
-                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
-
-            return user?.SubscribedChannels ?? new List<RSSChannel>();
         }
 
         public async Task<List<RSSChannel>> GetSubscriptionsAsync(int userId)

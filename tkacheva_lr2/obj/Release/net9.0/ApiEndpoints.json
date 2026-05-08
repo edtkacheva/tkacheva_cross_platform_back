@@ -294,6 +294,27 @@
   },
   {
     "ContainingType": "tkacheva_lr2.Controllers.RSSChannelsController",
+    "Method": "Update",
+    "RelativePath": "api/rss/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updated",
+        "Type": "tkacheva_lr2.Models.RSSChannel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.RSSChannelsController",
     "Method": "Delete",
     "RelativePath": "api/rss/{id}",
     "HttpMethod": "DELETE",
@@ -333,27 +354,6 @@
         "StatusCode": 200
       }
     ]
-  },
-  {
-    "ContainingType": "tkacheva_lr2.Controllers.RSSChannelsController",
-    "Method": "Update",
-    "RelativePath": "api/rss/{name}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "name",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "updated",
-        "Type": "tkacheva_lr2.Models.RSSChannel",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
   },
   {
     "ContainingType": "tkacheva_lr2.Controllers.RSSChannelsController",
@@ -459,64 +459,6 @@
       {
         "Name": "username",
         "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "tkacheva_lr2.Controllers.UsersController",
-    "Method": "Subscribe",
-    "RelativePath": "api/users/{username}/subscribe/{channelId}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "username",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "channelId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "tkacheva_lr2.Controllers.UsersController",
-    "Method": "GetSubscriptions",
-    "RelativePath": "api/users/{username}/subscriptions",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "username",
-        "Type": "System.String",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "tkacheva_lr2.Controllers.UsersController",
-    "Method": "Unsubscribe",
-    "RelativePath": "api/users/{username}/unsubscribe/{channelId}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "username",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "channelId",
-        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

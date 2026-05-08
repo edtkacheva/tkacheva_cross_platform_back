@@ -502,18 +502,21 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/rss/{id}": {
       "put": {
         "tags": [
           "RSSChannels"
         ],
         "parameters": [
           {
-            "name": "name",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -541,21 +544,7 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/rss/refresh": {
-      "post": {
-        "tags": [
-          "RSSChannels"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/rss/{id}": {
+      },
       "delete": {
         "tags": [
           "RSSChannels"
@@ -570,6 +559,18 @@
               "format": "int32"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/rss/refresh": {
+      "post": {
+        "tags": [
+          "RSSChannels"
         ],
         "responses": {
           "200": {
@@ -723,90 +724,6 @@
         }
       },
       "delete": {
-        "tags": [
-          "Users"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/users/{username}/subscribe/{channelId}": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/users/{username}/unsubscribe/{channelId}": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channelId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/users/{username}/subscriptions": {
-      "get": {
         "tags": [
           "Users"
         ],

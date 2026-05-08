@@ -62,22 +62,26 @@ namespace tkacheva_lr2.Controllers
             }
         }
 
-        [HttpPut("{name}")]
-        [Authorize]
-        public async Task<ActionResult> Update(string name, [FromBody] RSSChannel updated)
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Update(int id, [FromBody] RSSChannel updated)
         {
-            if (!User.IsInRole("Admin"))
-                return Forbid("Only admin can update channels.");
-
             try
             {
-                var channel = await _channelService.UpdateChannelAsync(name, updated);
-                if (channel == null) return NotFound();
+                var channel = await _channelService.UpdateChannelAsync(id, updated);
+
+                if (channel == null)
+                    return NotFound(new { message = "Channel not found." });
+
                 return Ok(channel);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
             catch (InvalidOperationException ex)
             {
-                return Conflict(ex.Message);
+                return Conflict(new { message = ex.Message });
             }
         }
 

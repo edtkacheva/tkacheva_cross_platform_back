@@ -107,51 +107,7 @@ namespace tkacheva_lr2.Controllers
 
             return userId;
         }
-
-        [HttpPost("{username}/subscribe/{channelId}")]
-        [Authorize]
-        public async Task<ActionResult> Subscribe(string username, int channelId)
-        {
-            var requester = User.Identity?.Name;
-            if (requester == null)
-                return Unauthorized();
-
-            if (!User.IsInRole("Admin") && requester.ToLower() != username.ToLower())
-                return Forbid("You can only subscribe for yourself.");
-
-            var ok = await _userService.SubscribeAsync(username, channelId);
-            if (!ok)
-                return NotFound("Channel not found.");
-
-            return Ok($"User {username} subscribed to channel.");
-        }
-
-        [HttpPost("{username}/unsubscribe/{channelId}")]
-        [Authorize]
-        public async Task<ActionResult> Unsubscribe(string username, int channelId)
-        {
-            var requester = User.Identity?.Name;
-            if (requester == null)
-                return Unauthorized();
-
-            if (!User.IsInRole("Admin") && requester.ToLower() != username.ToLower())
-                return Forbid("You can only unsubscribe for yourself.");
-
-            var ok = await _userService.UnsubscribeAsync(username, channelId);
-            if (!ok)
-                return NotFound("Subscription not found.");
-
-            return Ok($"User {username} unsubscribed from channel.");
-        }
-
-        [HttpGet("{username}/subscriptions")]
-        [Authorize]
-        public async Task<ActionResult> GetSubscriptions(string username)
-        {
-            var list = await _userService.GetSubscriptionsAsync(username);
-            return Ok(list);
-        }
-
+        
         [HttpPost("me/subscribe/{channelId}")]
         [Authorize]
         public async Task<ActionResult> SubscribeCurrentUser(int channelId)
