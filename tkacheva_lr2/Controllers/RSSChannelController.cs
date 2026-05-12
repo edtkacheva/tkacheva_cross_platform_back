@@ -64,14 +64,14 @@ namespace tkacheva_lr2.Controllers
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Update(int id, [FromBody] RSSChannel updated)
+        public async Task<ActionResult> Update(int id, [FromBody] CreateRSSChannelRequest request)
         {
             try
             {
-                var channel = await _channelService.UpdateChannelAsync(id, updated);
+                var channel = await _channelService.UpdateChannelAsync(id, request.Name, request.Url);
 
                 if (channel == null)
-                    return NotFound(new { message = "Channel not found." });
+                    return NotFound(new { message = "Канал не найден." });
 
                 return Ok(channel);
             }

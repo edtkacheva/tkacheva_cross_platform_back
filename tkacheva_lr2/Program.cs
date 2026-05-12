@@ -20,6 +20,16 @@ builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddHttpClient<RSSFeedService>();
 
+builder.Services.AddHttpClient<AIService>()
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        AllowAutoRedirect = true,
+        AutomaticDecompression =
+            System.Net.DecompressionMethods.GZip |
+            System.Net.DecompressionMethods.Deflate |
+            System.Net.DecompressionMethods.Brotli
+    });
+
 builder.Services.AddControllers()
     .AddJsonOptions(o =>
     {

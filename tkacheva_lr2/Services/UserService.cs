@@ -17,6 +17,9 @@ namespace tkacheva_lr2.Services
         {
             return await _context.AppUsers
                 .Include(u => u.SubscribedChannels)
+                .Where(u => u.Id != 1)
+                .AsNoTracking()
+                .OrderBy(u => u.Id)
                 .ToListAsync();
         }
 
@@ -65,18 +68,20 @@ namespace tkacheva_lr2.Services
             return user;
         }
 
-        public async Task<bool> DeleteUserAsync(string username)
+        public async Task<bool> DeleteUserAsync(int userId)
         {
             var user = await _context.AppUsers
-                .FirstOrDefaultAsync(u => u.UserName.ToLower() == username.ToLower());
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (user == null) return false;
+            if (user == null)
+                return false;
 
-            if (user.IsAdmin())
-                throw new InvalidOperationException("Admin cannot be deleted");
+            if (user.Id == 1)
+                throw new InvalidOperationException("Администратора нельзя удалить.");
 
             _context.AppUsers.Remove(user);
             await _context.SaveChangesAsync();
+
             return true;
         }
 

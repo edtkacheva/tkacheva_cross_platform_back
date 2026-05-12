@@ -84,18 +84,23 @@ namespace tkacheva_lr2.Controllers
             }
         }
 
-        [HttpDelete("{username}")]
+        [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Delete(string username)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!User.IsInRole("Admin"))
-                return Forbid("Only admin can delete users.");
+            try
+            {
+                var result = await _userService.DeleteUserAsync(id);
 
-            var result = await _userService.DeleteUserAsync(username);
-            if (!result)
-                return NotFound();
+                if (!result)
+                    return NotFound(new { message = "Пользователь не найден." });
 
-            return Ok("User deleted");
+                return Ok(new { message = "Пользователь удалён." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         private int? GetCurrentUserId()

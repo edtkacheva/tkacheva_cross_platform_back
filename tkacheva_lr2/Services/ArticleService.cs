@@ -13,11 +13,66 @@ namespace tkacheva_lr2.Services
             _context = context;
         }
 
-        public async Task<List<Article>> GetAllArticlesAsync()
+        public async Task<List<Article>> GetAllArticlesAsync(
+            int page,
+            int pageSize,
+            string? search,
+            List<int>? channelIds,
+            string? sortOrder,
+            string? periodFilter)
         {
-            return await _context.Articles
+            if (page < 1)
+                page = 1;
+
+            if (pageSize < 1)
+                pageSize = 10;
+
+            var query = _context.Articles
                 .Include(a => a.RSSChannel)
-                .OrderByDescending(a => a.PublishedAt)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var normalizedSearch = search.Trim().ToLower();
+
+                query = query.Where(a =>
+                    a.Title.ToLower().Contains(normalizedSearch) ||
+                    (a.Description != null && a.Description.ToLower().Contains(normalizedSearch)) ||
+                    a.Url.ToLower().Contains(normalizedSearch) ||
+                    (a.RSSChannel != null && a.RSSChannel.Name.ToLower().Contains(normalizedSearch))
+                );
+            }
+
+            if (channelIds != null && channelIds.Count > 0)
+            {
+                query = query.Where(a => channelIds.Contains(a.RSSChannelId));
+            }
+
+            var now = DateTime.UtcNow;
+
+            if (periodFilter == "lastMonth")
+            {
+                var monthAgo = now.AddMonths(-1);
+                query = query.Where(a => a.PublishedAt >= monthAgo);
+            }
+            else if (periodFilter == "lastYear")
+            {
+                var yearAgo = now.AddYears(-1);
+                query = query.Where(a => a.PublishedAt >= yearAgo);
+            }
+            else if (periodFilter == "previousYear")
+            {
+                var previousYear = now.Year - 1;
+                query = query.Where(a => a.PublishedAt.Year == previousYear);
+            }
+
+            query = sortOrder == "oldest"
+                ? query.OrderBy(a => a.PublishedAt)
+                : query.OrderByDescending(a => a.PublishedAt);
+
+            return await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .AsNoTracking()
                 .ToListAsync();
         }

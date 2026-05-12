@@ -18,10 +18,36 @@ namespace tkacheva_lr2.Controllers
         }
 
         [HttpGet]
-        [Authorize]
-        public async Task<ActionResult<IEnumerable<Article>>> GetAll()
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<Article>>> GetAll(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? search = null,
+            [FromQuery] string? channelIds = null,
+            [FromQuery] string? sortOrder = "newest",
+            [FromQuery] string? periodFilter = "all")
         {
-            var articles = await _articleService.GetAllArticlesAsync();
+            var selectedChannelIds = new List<int>();
+
+            if (!string.IsNullOrWhiteSpace(channelIds))
+            {
+                selectedChannelIds = channelIds
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => int.TryParse(x, out var id) ? id : (int?)null)
+                    .Where(x => x.HasValue)
+                    .Select(x => x!.Value)
+                    .ToList();
+            }
+
+            var articles = await _articleService.GetAllArticlesAsync(
+                page,
+                pageSize,
+                search,
+                selectedChannelIds,
+                sortOrder,
+                periodFilter
+            );
+
             return Ok(articles);
         }
 
