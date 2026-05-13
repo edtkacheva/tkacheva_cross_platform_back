@@ -1,37 +1,5 @@
 [
   {
-    "ContainingType": "tkacheva_lr2.Controllers.AIController",
-    "Method": "ExtractKeywords",
-    "RelativePath": "api/ai/extract-keywords",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "tkacheva_lr2.Controllers.ExtractKeywordsRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "tkacheva_lr2.Controllers.AIController",
-    "Method": "ExtractKeywordsFromPreview",
-    "RelativePath": "api/ai/extract-keywords-preview",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "tkacheva_lr2.Controllers.ExtractKeywordsPreviewRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
     "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
     "Method": "GetAll",
     "RelativePath": "api/articles",

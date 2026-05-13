@@ -29,17 +29,17 @@ namespace tkacheva_lr2.Services
 
             var query = _context.Articles
                 .Include(a => a.RSSChannel)
+                .Include(a => a.Keywords)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
-                var normalizedSearch = search.Trim().ToLower();
+                var normalizedSearch = ArticleKeywordService.NormalizeForSearch(search);
 
                 query = query.Where(a =>
-                    a.Title.ToLower().Contains(normalizedSearch) ||
-                    (a.Description != null && a.Description.ToLower().Contains(normalizedSearch)) ||
-                    a.Url.ToLower().Contains(normalizedSearch) ||
-                    (a.RSSChannel != null && a.RSSChannel.Name.ToLower().Contains(normalizedSearch))
+                    a.Keywords.Any(k =>
+                        k.NormalizedText.Contains(normalizedSearch)
+                    )
                 );
             }
 
@@ -177,6 +177,8 @@ namespace tkacheva_lr2.Services
                     subscribedChannelIds.Contains(s.Article.RSSChannelId))
                 .Include(s => s.Article)
                     .ThenInclude(a => a!.RSSChannel)
+                .Include(s => s.Article)
+                    .ThenInclude(a => a!.Keywords)
                 .OrderByDescending(s => s.Article!.PublishedAt)
                 .AsNoTracking()
                 .ToListAsync();
@@ -228,17 +230,18 @@ namespace tkacheva_lr2.Services
                     subscribedChannelIds.Contains(s.Article.RSSChannelId))
                 .Include(s => s.Article)
                     .ThenInclude(a => a!.RSSChannel)
+                .Include(s => s.Article)
+                    .ThenInclude(a => a!.Keywords)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
-                var normalizedSearch = search.Trim().ToLower();
+                var normalizedSearch = ArticleKeywordService.NormalizeForSearch(search);
 
                 query = query.Where(s =>
-                    s.Article!.Title.ToLower().Contains(normalizedSearch) ||
-                    (s.Article.Description != null && s.Article.Description.ToLower().Contains(normalizedSearch)) ||
-                    s.Article.Url.ToLower().Contains(normalizedSearch) ||
-                    (s.Article.RSSChannel != null && s.Article.RSSChannel.Name.ToLower().Contains(normalizedSearch))
+                    s.Article!.Keywords.Any(k =>
+                        k.NormalizedText.Contains(normalizedSearch)
+                    )
                 );
             }
 
@@ -366,6 +369,8 @@ namespace tkacheva_lr2.Services
                 .Where(s => s.AppUserId == user.Id && s.IsFavorite)
                 .Include(s => s.Article)
                     .ThenInclude(a => a!.RSSChannel)
+                .Include(s => s.Article)
+                    .ThenInclude(a => a!.Keywords)
                 .OrderByDescending(s => s.Article!.PublishedAt)
                 .AsNoTracking()
                 .ToListAsync();
@@ -394,6 +399,8 @@ namespace tkacheva_lr2.Services
                 .Where(s => s.AppUserId == userId && s.IsFavorite)
                 .Include(s => s.Article)
                     .ThenInclude(a => a!.RSSChannel)
+                .Include(s => s.Article)
+                    .ThenInclude(a => a!.Keywords)
                 .OrderByDescending(s => s.Article!.PublishedAt)
                 .AsNoTracking()
                 .ToListAsync();

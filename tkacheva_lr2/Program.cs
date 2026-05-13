@@ -17,18 +17,13 @@ builder.Services.AddScoped<RSSChannelService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ArticleService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ArticleKeywordService>();
+
+builder.Services.AddSingleton<IArticleAiQueue, ArticleAiQueue>();
+builder.Services.AddHostedService<ArticleAiBackgroundWorker>();
 
 builder.Services.AddHttpClient<RSSFeedService>();
-
-builder.Services.AddHttpClient<AIService>()
-    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-    {
-        AllowAutoRedirect = true,
-        AutomaticDecompression =
-            System.Net.DecompressionMethods.GZip |
-            System.Net.DecompressionMethods.Deflate |
-            System.Net.DecompressionMethods.Brotli
-    });
+builder.Services.AddHttpClient<AIService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(o =>

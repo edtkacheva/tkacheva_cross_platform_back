@@ -9,11 +9,19 @@ namespace tkacheva_lr2.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly RSSFeedService _rssFeedService;
+        private readonly ArticleKeywordService _articleKeywordService;
+        private readonly IArticleAiQueue _articleAiQueue;
 
-        public RSSChannelService(ApplicationDbContext context, RSSFeedService rssFeedService)
+        public RSSChannelService(
+            ApplicationDbContext context,
+            RSSFeedService rssFeedService,
+            ArticleKeywordService articleKeywordService,
+            IArticleAiQueue articleAiQueue)
         {
             _context = context;
             _rssFeedService = rssFeedService;
+            _articleKeywordService = articleKeywordService;
+            _articleAiQueue = articleAiQueue;
         }
 
         public async Task<List<RSSChannel>> GetAllChannelsAsync()
@@ -50,7 +58,10 @@ namespace tkacheva_lr2.Services
 
             return channels.FirstOrDefault(c => NormalizeUrlString(c.Url) == normalizedUrl);
         }
-        public async Task<RSSChannel> CreateChannelWithArticlesAsync(string channelName, string rssUrl, string creatorUsername)
+        public async Task<RSSChannel> CreateChannelWithArticlesAsync(
+            string channelName,
+            string rssUrl,
+            string creatorUsername)
         {
             if (string.IsNullOrWhiteSpace(channelName))
                 throw new ArgumentException("Название канала не может быть пустым.");
@@ -58,13 +69,25 @@ namespace tkacheva_lr2.Services
             if (string.IsNullOrWhiteSpace(rssUrl))
                 throw new ArgumentException("RSS URL не может быть пустым.");
 
+            channelName = channelName.Trim();
+            rssUrl = rssUrl.Trim();
+
             var normalizedNewUrl = NormalizeUrlString(rssUrl);
 
-            if (await _context.RSSChannels.AnyAsync(c => c.Name.ToLower() == channelName.ToLower()))
+            var channelNameExists = await _context.RSSChannels
+                .AnyAsync(c => c.Name.ToLower() == channelName.ToLower());
+
+            if (channelNameExists)
                 throw new InvalidOperationException("Канал с таким названием уже существует.");
 
-            var existingChannels = await _context.RSSChannels.ToListAsync();
-            if (existingChannels.Any(c => NormalizeUrlString(c.Url) == normalizedNewUrl))
+            var existingChannels = await _context.RSSChannels
+                .AsNoTracking()
+                .ToListAsync();
+
+            var channelUrlExists = existingChannels.Any(c =>
+                NormalizeUrlString(c.Url) == normalizedNewUrl);
+
+            if (channelUrlExists)
                 throw new InvalidOperationException("Этот RSS-источник уже добавлен.");
 
             var feedResult = await _rssFeedService.ValidateAndReadFeedAsync(rssUrl);
@@ -78,7 +101,7 @@ namespace tkacheva_lr2.Services
 
             if (user == null)
                 throw new InvalidOperationException("Пользователь не найден.");
-            
+
             var channel = new RSSChannel
             {
                 Name = channelName,
@@ -89,24 +112,34 @@ namespace tkacheva_lr2.Services
             _context.RSSChannels.Add(channel);
             await _context.SaveChangesAsync();
 
+            var createdArticles = new List<Article>();
+
             foreach (var item in feedResult.Articles)
             {
-                var existingArticle = await _context.Articles
-                    .FirstOrDefaultAsync(a => a.Url.ToLower() == item.Url.ToLower());
+                if (string.IsNullOrWhiteSpace(item.Url))
+                    continue;
 
-                if (existingArticle == null)
+                var normalizedArticleUrl = item.Url.Trim().ToLower();
+
+                var existingArticle = await _context.Articles
+                    .FirstOrDefaultAsync(a => a.Url.ToLower() == normalizedArticleUrl);
+
+                if (existingArticle != null)
+                    continue;
+
+                var article = new Article
                 {
-                    var article = new Article
-                    {
-                        Title = item.Title,
-                        Url = item.Url,
-                        Description = item.Description,
-                        PublishedAt = item.PublishedAt,
-                        RSSChannelId = channel.Id
-                    };
-                    _context.Articles.Add(article);
-                }
+                    Title = item.Title,
+                    Url = item.Url,
+                    Description = item.Description,
+                    PublishedAt = item.PublishedAt,
+                    RSSChannelId = channel.Id
+                };
+
+                _context.Articles.Add(article);
+                createdArticles.Add(article);
             }
+
             await _context.SaveChangesAsync();
 
             if (!user.IsAdmin())
@@ -136,6 +169,13 @@ namespace tkacheva_lr2.Services
             }
 
             await _context.SaveChangesAsync();
+
+            foreach (var article in createdArticles)
+            {
+                await _articleKeywordService.EnsureBaseKeywordsAsync(article);
+                await _articleAiQueue.EnqueueAsync(article.Id);
+            }
+
             return channel;
         }
 
@@ -225,6 +265,9 @@ namespace tkacheva_lr2.Services
                     await _context.SaveChangesAsync();
 
                     addedArticlesCount++;
+
+                    await _articleKeywordService.EnsureBaseKeywordsAsync(article);
+                    await _articleAiQueue.EnqueueAsync(article.Id);
                 }
 
                 var stateExists = await _context.UserArticleStates
