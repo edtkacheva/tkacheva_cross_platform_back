@@ -3,6 +3,38 @@
   "WorkspaceRootPath": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\articleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:services\\articleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\controllers\\articlescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:controllers\\articlescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\rssfeedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:services\\rssfeedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\rsschannelservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:services\\rsschannelservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\models\\feedvalidationresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:models\\feedvalidationresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\models\\article.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:models\\article.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\aiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:services\\aiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,26 +45,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\articleaibackgroundworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:services\\articleaibackgroundworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\rsschannelservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:services\\rsschannelservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\articleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:services\\articleservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\models\\article.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:models\\article.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\articlekeywordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -51,10 +63,6 @@
       "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\controllers\\articlescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:controllers\\articlescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -65,10 +73,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\models\\creatersschannelrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:models\\creatersschannelrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\models\\feedvalidationresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:models\\feedvalidationresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -83,12 +87,16 @@
       "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:models\\userarticlestate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\services\\rssfeedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:services\\rssfeedservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|c:\\users\\katuha\\documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\models\\rsschannel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{AA90C3F7-ACF7-42A0-B5E2-1B7220E6CF6B}|tkacheva_lr2.csproj|solutionrelative:models\\rsschannel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\ArticleCategoryService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\ArticleCategoryService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\ArticleCategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\ArticleCategory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -98,7 +106,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 22,
+          "SelectedChildIndex": 30,
           "Children": [
             {
               "$type": "Bookmark",
@@ -174,7 +182,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 22,
+              "Title": "ArticleCategoryService.cs",
+              "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\ArticleCategoryService.cs",
+              "RelativeDocumentMoniker": "Services\\ArticleCategoryService.cs",
+              "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\ArticleCategoryService.cs",
+              "RelativeToolTip": "Services\\ArticleCategoryService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T14:37:43.342Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "ArticleCategory.cs",
+              "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\ArticleCategory.cs",
+              "RelativeDocumentMoniker": "Models\\ArticleCategory.cs",
+              "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\ArticleCategory.cs",
+              "RelativeToolTip": "Models\\ArticleCategory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-13T14:31:54.753Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "ArticleAiBackgroundWorker.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\ArticleAiBackgroundWorker.cs",
               "RelativeDocumentMoniker": "Services\\ArticleAiBackgroundWorker.cs",
@@ -182,12 +214,11 @@
               "RelativeToolTip": "Services\\ArticleAiBackgroundWorker.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-12T20:48:44.05Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-12T20:48:44.05Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "ArticleAiQueue.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\ArticleAiQueue.cs",
               "RelativeDocumentMoniker": "Services\\ArticleAiQueue.cs",
@@ -195,12 +226,11 @@
               "RelativeToolTip": "Services\\ArticleAiQueue.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-12T20:48:01.685Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-12T20:48:01.685Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "ArticleKeywordService.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\ArticleKeywordService.cs",
               "RelativeDocumentMoniker": "Services\\ArticleKeywordService.cs",
@@ -208,12 +238,11 @@
               "RelativeToolTip": "Services\\ArticleKeywordService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-12T20:47:22.31Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-12T20:47:22.31Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 9,
               "Title": "ArticleKeyword.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\ArticleKeyword.cs",
               "RelativeDocumentMoniker": "Models\\ArticleKeyword.cs",
@@ -221,25 +250,23 @@
               "RelativeToolTip": "Models\\ArticleKeyword.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-12T20:43:52.146Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-12T20:43:52.146Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 8,
               "Title": "AIService.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\AIService.cs",
               "RelativeDocumentMoniker": "Services\\AIService.cs",
               "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\AIService.cs",
               "RelativeToolTip": "Services\\AIService.cs",
-              "ViewState": "AgIAAH0AAAAAAAAAAAAwwPsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAwwFAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-12T14:20:02.554Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-12T14:20:02.554Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "CreateRSSChannelRequest.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\CreateRSSChannelRequest.cs",
               "RelativeDocumentMoniker": "Models\\CreateRSSChannelRequest.cs",
@@ -251,31 +278,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 5,
               "Title": "FeedValidationResult.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\FeedValidationResult.cs",
               "RelativeDocumentMoniker": "Models\\FeedValidationResult.cs",
               "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\FeedValidationResult.cs",
               "RelativeToolTip": "Models\\FeedValidationResult.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-27T20:35:30.78Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 2,
               "Title": "RSSFeedService.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\RSSFeedService.cs",
               "RelativeDocumentMoniker": "Services\\RSSFeedService.cs",
               "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\RSSFeedService.cs",
               "RelativeToolTip": "Services\\RSSFeedService.cs",
-              "ViewState": "AgIAAKQAAAAAAAAAAAAqwLMAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAACYAAAAAAAAAAAAgwDYAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-27T20:31:18.572Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "UserArticleState.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\UserArticleState.cs",
               "RelativeDocumentMoniker": "Models\\UserArticleState.cs",
@@ -287,7 +314,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "AuthService.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\AuthService.cs",
               "RelativeDocumentMoniker": "Services\\AuthService.cs",
@@ -299,33 +326,32 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "ArticleService.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\ArticleService.cs",
               "RelativeDocumentMoniker": "Services\\ArticleService.cs",
               "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\ArticleService.cs",
               "RelativeToolTip": "Services\\ArticleService.cs",
-              "ViewState": "AgIAAGQBAAAAAAAAAAAgwHUBAAA/AAAAAAAAAA==",
+              "ViewState": "AgIAAJYCAAAAAAAAAAAqwLICAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-19T14:27:37.798Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "RSSChannelService.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\RSSChannelService.cs",
               "RelativeDocumentMoniker": "Services\\RSSChannelService.cs",
               "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\RSSChannelService.cs",
               "RelativeToolTip": "Services\\RSSChannelService.cs",
-              "ViewState": "AgIAAGEAAAAAAAAAAAAIwGoAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAC8BAAAAAAAAAAAowEABAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-19T14:27:09.795Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-19T14:27:09.795Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "Services\\UserService.cs",
@@ -337,7 +363,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
@@ -349,19 +375,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 1,
               "Title": "ArticlesController.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Controllers\\ArticlesController.cs",
               "RelativeDocumentMoniker": "Controllers\\ArticlesController.cs",
               "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Controllers\\ArticlesController.cs",
               "RelativeToolTip": "Controllers\\ArticlesController.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAQwBMAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAGAAAAAAAAAAAAAMwHUAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T21:05:46.19Z"
+              "WhenOpened": "2025-11-16T21:05:46.19Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "RSSChannelController.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Controllers\\RSSChannelController.cs",
               "RelativeDocumentMoniker": "Controllers\\RSSChannelController.cs",
@@ -373,7 +400,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
@@ -385,20 +412,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
               "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Data\\ApplicationDbContext.cs",
               "RelativeToolTip": "Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAACwAAAAAAAAAAAAuwEIAAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAADsAAAAAAAAAAAAAwFMAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T18:07:33.87Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-16T18:07:33.87Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "AppUser.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\AppUser.cs",
               "RelativeDocumentMoniker": "Models\\AppUser.cs",
@@ -422,29 +448,27 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "Article.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\Article.cs",
               "RelativeDocumentMoniker": "Models\\Article.cs",
               "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Models\\Article.cs",
               "RelativeToolTip": "Models\\Article.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAgwBIAAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAA1wBAAAABGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-16T18:02:17.259Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-16T18:02:17.259Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\katuha\\Documents\\files\\study\\7sem\\cross_platform_dev\\tkacheva_lr2\\tkacheva_lr2\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABUAAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-14T10:02:10.813Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-14T10:02:10.813Z"
             }
           ]
         }

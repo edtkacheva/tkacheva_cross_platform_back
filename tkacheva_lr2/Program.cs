@@ -18,6 +18,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ArticleService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ArticleKeywordService>();
+builder.Services.AddScoped<ArticleCategoryService>();
 
 builder.Services.AddSingleton<IArticleAiQueue, ArticleAiQueue>();
 builder.Services.AddHostedService<ArticleAiBackgroundWorker>();

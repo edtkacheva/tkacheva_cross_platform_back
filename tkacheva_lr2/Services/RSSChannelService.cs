@@ -11,16 +11,19 @@ namespace tkacheva_lr2.Services
         private readonly RSSFeedService _rssFeedService;
         private readonly ArticleKeywordService _articleKeywordService;
         private readonly IArticleAiQueue _articleAiQueue;
+        private readonly ArticleCategoryService _articleCategoryService;
 
         public RSSChannelService(
             ApplicationDbContext context,
             RSSFeedService rssFeedService,
             ArticleKeywordService articleKeywordService,
+            ArticleCategoryService articleCategoryService,
             IArticleAiQueue articleAiQueue)
         {
             _context = context;
             _rssFeedService = rssFeedService;
             _articleKeywordService = articleKeywordService;
+            _articleCategoryService = articleCategoryService;
             _articleAiQueue = articleAiQueue;
         }
 
@@ -112,7 +115,7 @@ namespace tkacheva_lr2.Services
             _context.RSSChannels.Add(channel);
             await _context.SaveChangesAsync();
 
-            var createdArticles = new List<Article>();
+            var createdArticles = new List<(Article Article, List<string> Categories)>();
 
             foreach (var item in feedResult.Articles)
             {
@@ -137,7 +140,7 @@ namespace tkacheva_lr2.Services
                 };
 
                 _context.Articles.Add(article);
-                createdArticles.Add(article);
+                createdArticles.Add((article, item.Categories));
             }
 
             await _context.SaveChangesAsync();
@@ -170,10 +173,16 @@ namespace tkacheva_lr2.Services
 
             await _context.SaveChangesAsync();
 
-            foreach (var article in createdArticles)
+            foreach (var item in createdArticles)
             {
-                await _articleKeywordService.EnsureBaseKeywordsAsync(article);
-                await _articleAiQueue.EnqueueAsync(article.Id);
+                await _articleKeywordService.EnsureBaseKeywordsAsync(item.Article);
+
+                await _articleCategoryService.EnsureCategoriesAsync(
+                    item.Article.Id,
+                    item.Categories
+                );
+
+                await _articleAiQueue.EnqueueAsync(item.Article.Id);
             }
 
             return channel;
@@ -267,8 +276,19 @@ namespace tkacheva_lr2.Services
                     addedArticlesCount++;
 
                     await _articleKeywordService.EnsureBaseKeywordsAsync(article);
+
+                    await _articleCategoryService.EnsureCategoriesAsync(
+                        article.Id,
+                        item.Categories
+                    );
+
                     await _articleAiQueue.EnqueueAsync(article.Id);
                 }
+
+                await _articleCategoryService.EnsureCategoriesAsync(
+                    article.Id,
+                    item.Categories
+                );
 
                 var stateExists = await _context.UserArticleStates
                     .AnyAsync(s => s.AppUserId == userId && s.ArticleId == article.Id);
@@ -304,26 +324,34 @@ namespace tkacheva_lr2.Services
 
             foreach (var item in feedResult.Articles)
             {
-                var articleExists = await _context.Articles
-                    .AnyAsync(a => a.Url.ToLower() == item.Url.ToLower());
+                var article = await _context.Articles
+                    .FirstOrDefaultAsync(a => a.Url.ToLower() == item.Url.ToLower());
 
-                if (articleExists)
-                    continue;
-
-                var article = new Article
+                if (article == null)
                 {
-                    Title = item.Title,
-                    Url = item.Url,
-                    Description = item.Description,
-                    PublishedAt = item.PublishedAt,
-                    RSSChannelId = channel.Id
-                };
+                    article = new Article
+                    {
+                        Title = item.Title,
+                        Url = item.Url,
+                        Description = item.Description,
+                        PublishedAt = item.PublishedAt,
+                        RSSChannelId = channel.Id
+                    };
 
-                _context.Articles.Add(article);
-                addedArticlesCount++;
+                    _context.Articles.Add(article);
+                    await _context.SaveChangesAsync();
+
+                    addedArticlesCount++;
+
+                    await _articleKeywordService.EnsureBaseKeywordsAsync(article);
+                    await _articleAiQueue.EnqueueAsync(article.Id);
+                }
+
+                await _articleCategoryService.EnsureCategoriesAsync(
+                    article.Id,
+                    item.Categories
+                );
             }
-
-            await _context.SaveChangesAsync();
 
             return addedArticlesCount;
         }

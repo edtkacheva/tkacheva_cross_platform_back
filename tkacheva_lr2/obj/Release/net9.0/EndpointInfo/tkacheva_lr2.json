@@ -44,6 +44,13 @@
             }
           },
           {
+            "name": "channelCategoryFilters",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "sortOrder",
             "in": "query",
             "schema": {
@@ -115,6 +122,118 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/articles/categories": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/articles/me": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "isRead",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelIds",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "channelCategoryFilters",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "newest"
+            }
+          },
+          {
+            "name": "periodFilter",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "all"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/articles/me/favorites": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/articles/me/recommendations": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -247,29 +366,6 @@
         }
       }
     },
-    "/api/articles/{articleId}/mark-read": {
-      "post": {
-        "tags": [
-          "Articles"
-        ],
-        "parameters": [
-          {
-            "name": "articleId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/articles/favorites/{username}": {
       "get": {
         "tags": [
@@ -292,10 +388,21 @@
         }
       }
     },
-    "/api/articles/me/favorites": {
-      "get": {
+    "/api/articles/{articleId}/mark-read": {
+      "post": {
         "tags": [
           "Articles"
+        ],
+        "parameters": [
+          {
+            "name": "articleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -348,67 +455,10 @@
         }
       }
     },
-    "/api/articles/me": {
+    "/api/articles/category-tree": {
       "get": {
         "tags": [
           "Articles"
-        ],
-        "parameters": [
-          {
-            "name": "isRead",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          },
-          {
-            "name": "search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "channelIds",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortOrder",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "default": "newest"
-            }
-          },
-          {
-            "name": "periodFilter",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "default": "all"
-            }
-          }
         ],
         "responses": {
           "200": {
@@ -934,11 +984,40 @@
             },
             "nullable": true
           },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ArticleCategory"
+            },
+            "nullable": true
+          },
           "isRead": {
             "type": "boolean"
           },
           "isFavorite": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ArticleCategory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "articleId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "normalizedName": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -21,6 +21,16 @@ public class RSSFeedService
         };
     }
 
+    private static List<string> GetArticleCategories(SyndicationItem item)
+    {
+        return item.Categories
+            .Select(c => c.Name)
+            .Where(c => !string.IsNullOrWhiteSpace(c))
+            .Select(c => c.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
     public async Task<FeedValidationResult> ValidateAndReadFeedAsync(string url)
     {
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
@@ -44,8 +54,6 @@ public class RSSFeedService
                 };
             }
 
-            var finalUri = response.RequestMessage.RequestUri;
-
             using var stream = await response.Content.ReadAsStreamAsync();
             using var reader = XmlReader.Create(stream);
             var feed = SyndicationFeed.Load(reader);
@@ -65,8 +73,9 @@ public class RSSFeedService
                 Url = GetArticleUrl(item),
                 Description = item.Summary?.Text,
                 PublishedAt = item.PublishDate != DateTimeOffset.MinValue
-                    ? item.PublishDate.UtcDateTime
-                    : DateTime.UtcNow
+                ? item.PublishDate.UtcDateTime
+                : DateTime.UtcNow,
+                Categories = GetArticleCategories(item)
             })
             .Where(a => !string.IsNullOrWhiteSpace(a.Url))
             .ToList();

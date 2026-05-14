@@ -14,6 +14,7 @@ namespace tkacheva_lr2.Models
         public RSSChannel? RSSChannel { get; set; }
         public List<UserArticleState> UserStates { get; set; } = new();
         public List<ArticleKeyword> Keywords { get; set; } = new();
+        public List<ArticleCategory> Categories { get; set; } = new();
 
         [NotMapped]
         public bool IsRead { get; set; }

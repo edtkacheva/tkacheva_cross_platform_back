@@ -28,6 +28,11 @@
         "IsRequired": false
       },
       {
+        "Name": "channelCategoryFilters",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "sortOrder",
         "Type": "System.String",
         "IsRequired": false
@@ -169,6 +174,26 @@
   },
   {
     "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
+    "Method": "GetCategories",
+    "RelativePath": "api/articles/categories",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
+    "Method": "GetCategoryTree",
+    "RelativePath": "api/articles/category-tree",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
     "Method": "GetFavoritesForUser",
     "RelativePath": "api/articles/favorites/{username}",
     "HttpMethod": "GET",
@@ -217,6 +242,11 @@
         "IsRequired": false
       },
       {
+        "Name": "channelCategoryFilters",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "sortOrder",
         "Type": "System.String",
         "IsRequired": false
@@ -233,6 +263,16 @@
     "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
     "Method": "GetMyFavorites",
     "RelativePath": "api/articles/me/favorites",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "tkacheva_lr2.Controllers.ArticlesController",
+    "Method": "GetMyRecommendations",
+    "RelativePath": "api/articles/me/recommendations",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("tkacheva_lr2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0633a4b7d986874e1d9dcf37760ba5523e9692de")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d1fea0d8b2c376e1e72294d9b371a1e394c3917e")]
 [assembly: System.Reflection.AssemblyProductAttribute("tkacheva_lr2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("tkacheva_lr2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

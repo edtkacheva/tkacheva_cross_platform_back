@@ -15,6 +15,7 @@ namespace tkacheva_lr2.Data
         public DbSet<RSSChannel> RSSChannels { get; set; }
         public DbSet<UserArticleState> UserArticleStates { get; set; }
         public DbSet<ArticleKeyword> ArticleKeywords { get; set; }
+        public DbSet<ArticleCategory> ArticleCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -75,6 +76,22 @@ namespace tkacheva_lr2.Data
 
             modelBuilder.Entity<ArticleKeyword>()
                 .HasIndex(k => new { k.ArticleId, k.Source });
+
+            modelBuilder.Entity<ArticleCategory>()
+                .HasOne(c => c.Article)
+                .WithMany(a => a.Categories)
+                .HasForeignKey(c => c.ArticleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ArticleCategory>()
+                .HasIndex(c => c.ArticleId);
+
+            modelBuilder.Entity<ArticleCategory>()
+                .HasIndex(c => c.NormalizedName);
+
+            modelBuilder.Entity<ArticleCategory>()
+                .HasIndex(c => new { c.ArticleId, c.NormalizedName })
+                .IsUnique();
         }
     }
 }
